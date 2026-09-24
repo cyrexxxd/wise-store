@@ -1,8 +1,6 @@
-/// Клиент публичного каталога (T-15). Контракт сверен с реальным бэкендом:
-/// CatStore.Api/Controllers/PublicCatalogController.cs + CatStore.Contracts/Catalog/PublicCatalogDtos.cs.
-/// Три маршрута: GET /products (?type=, всегда только активные), GET /products/{slug},
-/// GET /crates. Ни Id, ни Actions, ни IsActive наружу не отдаются — сознательно, см.
-/// комментарий у PublicProductDto на бэкенде.
+/// Клиент каталога витрины. Данные — из EasyDonate через серверные маршруты Nuxt
+/// (server/api/catalog/*): браузер не знает ключа магазина и ходит только на свой origin.
+/// slug товара — это его id в EasyDonate, price — в рублях (валюта магазина EasyDonate).
 
 export interface PagedResult<T> {
   items: T[]
@@ -62,8 +60,7 @@ export function countByType(products: readonly PublicProduct[]): Record<string, 
 }
 
 function useCatalogBase(): string {
-  const config = useRuntimeConfig()
-  return config.public.catalogApiBase
+  return '/api/catalog'
 }
 
 /// Полный активный каталог одним запросом — используется на хабе (index.vue) для счётчиков

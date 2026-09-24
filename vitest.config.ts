@@ -5,7 +5,7 @@ import { defineConfig } from 'vitest/config'
 // отдельным nuxt-окружением — не настроено, витрина пока не даёт для этого нетривиальной логики.
 export default defineConfig({
   test: {
-    include: ['app/**/*.test.ts'],
+    include: ['app/**/*.test.ts', 'server/**/*.test.ts'],
   },
   resolve: {
     alias: {

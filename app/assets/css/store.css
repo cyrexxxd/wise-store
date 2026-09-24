@@ -347,6 +347,7 @@
 
   .tier-name { display: block; font-family: var(--f-display); font-weight: 700; font-size: 1.05rem; color: var(--accent-hi); }
   .tier-desc { margin: 6px 0 0; font-size: 0.78rem; line-height: 1.5; color: var(--muted); white-space: normal; }
+  .tier-price i { font-style: normal; color: var(--muted); font-size: 0.8rem; font-weight: 400; }
   .tier-price { display: block; font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.08rem; color: var(--ink); margin: 10px 0 14px; }
   .cmp thead th .add { margin: 0 auto; }
 

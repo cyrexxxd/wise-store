@@ -7,7 +7,14 @@ export function formatPrice(amount: number): string {
   return formatter.format(amount)
 }
 
+const CURRENCY_SYMBOL: Record<string, string> = { KZT: '₸', RUB: '₽' }
+
 export function formatPriceWithCurrency(amount: number, currency: string): string {
-  const symbol = currency === 'KZT' ? '₸' : currency
-  return `${formatPrice(amount)} ${symbol}`
+  return `${formatPrice(amount)} ${CURRENCY_SYMBOL[currency] ?? currency}`
+}
+
+/// Ориентир в тенге для цены в рублях (платёж EasyDonate идёт в рублях, игроки считают
+/// в тенге). Округляем до десятков — это подсказка, а не сумма к оплате.
+export function approxKzt(rub: number, kztPerRub: number): string {
+  return `≈ ${formatPrice(Math.round((rub * kztPerRub) / 10) * 10)} ₸`
 }

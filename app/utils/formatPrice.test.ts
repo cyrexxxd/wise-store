@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatPrice, formatPriceWithCurrency } from './formatPrice'
+import { approxKzt, formatPrice, formatPriceWithCurrency } from './formatPrice'
 
 // Intl formats ru-RU grouping with U+00A0 (non-breaking space), not a plain U+0020 space —
 // visually identical to the original store.js output, but the code point differs, so tests
@@ -27,5 +27,16 @@ describe('formatPriceWithCurrency', () => {
 
   it('falls back to the raw currency code for anything else', () => {
     expect(formatPriceWithCurrency(10, 'USD')).toBe('10 USD')
+  })
+})
+
+describe('RUB and tenge hint', () => {
+  it('renders RUB as the ruble sign', () => {
+    expect(formatPriceWithCurrency(245, 'RUB')).toBe('245 ₽')
+  })
+
+  it('rounds the tenge hint to tens', () => {
+    expect(approxKzt(245, 5.3)).toBe(`≈ 1${NBSP}300 ₸`)
+    expect(approxKzt(75, 5.3)).toBe('≈ 400 ₸')
   })
 })

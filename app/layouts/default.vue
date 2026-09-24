@@ -15,6 +15,5 @@
 
     <SiteFooter />
     <CartModal />
-    <LoginModal />
   </div>
 </template>
