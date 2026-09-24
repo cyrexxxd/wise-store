@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Копирование IP сервера по клику — перенос store.js 1:1, только вместо innerText-трюка
 // используется реактивное состояние copied.
-const props = withDefaults(defineProps<{ ip?: string }>(), { ip: 'wisepvp.net' })
+const props = withDefaults(defineProps<{ ip?: string }>(), { ip: 'catiers.xyz' })
 
 const copied = ref(false)
 let resetTimer: ReturnType<typeof setTimeout> | undefined
