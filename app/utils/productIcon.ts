@@ -1,33 +1,58 @@
-/// PublicProductDto не несёт иконку — витрина выбирает символ спрайта (IconSprite.vue)
-/// по типу товара и, для косметики, по ключевым словам в slug/названии (шляпа/крылья/меч/
-/// питомец продолжают старый дизайн-макет, где иконка была на усмотрение вёрстки).
-/// Список известных типов — PRODUCT_TYPE в useCatalogApi.ts; сюда же попадает 'currency',
-/// который не в перечне админки, но допустим как строка (см. комментарий там).
+/// Иконка товара — рендер настоящей модели из игры (public/icons/*.png, 512×512, прозрачный фон).
+/// Модели — Blockbench-исходники CATCosmetics: ключи кейсов, «Коготь кота», тюбетейка, кейс;
+/// короны ролей сделаны только для сайта. Перерендер: _tools/bb/icons.mjs в репозитории сервера.
 import type { PublicProduct } from '~/composables/useCatalogApi'
 
-const COSMETIC_KEYWORD_ICON: Array<[RegExp, string]> = [
-  [/hat|шляп/i, 'hat'],
-  [/wing|крыль/i, 'wings'],
-  [/sword|меч|клинок/i, 'sword'],
-  [/pet|питомец|дракон/i, 'pet'],
+export const ITEM_ICONS = [
+  'crown_wise',
+  'crown_cat',
+  'crown_premium',
+  'claw',
+  'key_title',
+  'key_cosmetic',
+  'tubeteika',
+  'crate',
+] as const
+export type ItemIconName = (typeof ITEM_ICONS)[number]
+
+// роль → своя корона; порядок важен: «Premium» проверяем раньше короткого «CAT»
+const RANK_ICON: Array<[RegExp, ItemIconName]> = [
+  [/premium|премиум/i, 'crown_premium'],
+  [/\bcat\b|кэт/i, 'crown_cat'],
+  [/wise|вайз/i, 'crown_wise'],
 ]
 
-export function iconForProduct(product: Pick<PublicProduct, 'type' | 'slug' | 'name'>): string {
+export function iconForProduct(product: Pick<PublicProduct, 'type' | 'slug' | 'name'>): ItemIconName {
+  const haystack = `${product.slug} ${product.name}`
   switch (product.type) {
-    case 'crate_key':
-      return 'crate'
-    case 'title':
-      return 'title'
     case 'rank':
-      return 'shield'
+      return RANK_ICON.find(([re]) => re.test(haystack))?.[1] ?? 'crown_cat'
     case 'currency':
-      return 'gem'
-    case 'cosmetic': {
-      const haystack = `${product.slug} ${product.name}`
-      const match = COSMETIC_KEYWORD_ICON.find(([re]) => re.test(haystack))
-      return match ? match[1] : 'hat'
-    }
+      return 'claw'
+    case 'crate_key':
+      return /косметик|cosmetic/i.test(haystack) ? 'key_cosmetic' : 'key_title'
+    case 'title':
+      return 'key_title'
+    case 'cosmetic':
+      return /sword|меч|клинок|коготь/i.test(haystack) ? 'claw' : 'tubeteika'
     default:
-      return 'gem'
+      return 'crate'
   }
+}
+
+// корзины, сохранённые до перехода на рендеры, хранят имена SVG-символов
+const LEGACY_ICON: Record<string, ItemIconName> = {
+  shield: 'crown_cat',
+  gem: 'claw',
+  crate: 'key_title',
+  title: 'key_title',
+  hat: 'tubeteika',
+  wings: 'tubeteika',
+  pet: 'tubeteika',
+  sword: 'claw',
+}
+
+export function iconUrl(icon: string): string {
+  const known = (ITEM_ICONS as readonly string[]).includes(icon) ? (icon as ItemIconName) : LEGACY_ICON[icon] ?? 'crate'
+  return `/icons/${known}.png`
 }

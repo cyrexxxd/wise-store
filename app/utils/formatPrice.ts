@@ -13,8 +13,14 @@ export function formatPriceWithCurrency(amount: number, currency: string): strin
   return `${formatPrice(amount)} ${CURRENCY_SYMBOL[currency] ?? currency}`
 }
 
-/// Ориентир в тенге для цены в рублях (платёж EasyDonate идёт в рублях, игроки считают
-/// в тенге). Округляем до десятков — это подсказка, а не сумма к оплате.
-export function approxKzt(rub: number, kztPerRub: number): string {
-  return `≈ ${formatPrice(Math.round((rub * kztPerRub) / 10) * 10)} ₸`
+/// Основная валюта витрины — тенге. EasyDonate принимает оплату только в рублях, поэтому цена
+/// товара хранится в рублях, а в тенге пересчитывается по курсу из конфига (NUXT_PUBLIC_KZT_PER_RUB)
+/// до целого тенге. Сумма к оплате в рублях всегда показывается рядом — списывается именно она.
+export function rubToKzt(rub: number, kztPerRub: number): number {
+  // toFixed: 245 × 5.3 в двоичной арифметике = 1298.4999…, без него половина округлялась бы вниз
+  return Math.round(Number((rub * kztPerRub).toFixed(6)))
+}
+
+export function formatKzt(kzt: number): string {
+  return `${formatPrice(kzt)} ₸`
 }

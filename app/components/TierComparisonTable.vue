@@ -6,7 +6,7 @@
 // PublicProductDto булевых фич по тиру не несёт.
 import type { PublicProduct } from '~/composables/useCatalogApi'
 import { useCart } from '~/composables/useCart'
-import { approxKzt, formatPrice } from '~/utils/formatPrice'
+import { formatKzt, formatPrice, rubToKzt } from '~/utils/formatPrice'
 import { iconForProduct } from '~/utils/productIcon'
 
 export interface ComparisonRow {
@@ -46,9 +46,10 @@ onBeforeUnmount(() => clearTimeout(resetTimer))
         <tr>
           <th v-if="rows.length" class="cmp-label" />
           <th v-for="product in products" :key="product.slug">
+            <ItemIcon class="tier-ico" :icon="iconForProduct(product)" :size="88" />
             <span class="tier-name">{{ product.name }}</span>
             <p v-if="product.description" class="tier-desc">{{ product.description }}</p>
-            <span class="tier-price">{{ formatPrice(product.price) }} ₽ <i>{{ approxKzt(product.price, kztPerRub) }}</i></span>
+            <span class="tier-price">{{ formatKzt(rubToKzt(product.price, kztPerRub)) }} <i>к оплате {{ formatPrice(product.price) }} ₽</i></span>
             <button class="add" @click="addToCart(product)">
               <svg><use href="#ic-cart" /></svg>{{ addedSlug === product.slug ? 'Добавлено' : 'Купить' }}
             </button>

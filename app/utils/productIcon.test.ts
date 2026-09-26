@@ -1,32 +1,42 @@
 import { describe, expect, it } from 'vitest'
-import { iconForProduct } from './productIcon'
+import { iconForProduct, iconUrl } from './productIcon'
 
 describe('iconForProduct', () => {
-  it('maps crate_key to the crate icon', () => {
-    expect(iconForProduct({ type: 'crate_key', slug: 'crate-titles', name: 'Кейс титулов' })).toBe('crate')
+  it('gives each role its own crown', () => {
+    expect(iconForProduct({ type: 'rank', slug: '1120632', name: 'Роль Wise' })).toBe('crown_wise')
+    expect(iconForProduct({ type: 'rank', slug: '1120633', name: 'Роль CAT' })).toBe('crown_cat')
+    expect(iconForProduct({ type: 'rank', slug: '1120634', name: 'Роль Premium' })).toBe('crown_premium')
+    expect(iconForProduct({ type: 'rank', slug: '1', name: 'Роль VIP' })).toBe('crown_cat')
   })
 
-  it('maps title to the title icon', () => {
-    expect(iconForProduct({ type: 'title', slug: 'title-recruit', name: 'Титул Recruit' })).toBe('title')
+  it('maps claws (currency) to the claw', () => {
+    expect(iconForProduct({ type: 'currency', slug: '9', name: '300 Когтей' })).toBe('claw')
   })
 
-  it('maps rank to the shield icon', () => {
-    expect(iconForProduct({ type: 'rank', slug: 'rank-vip', name: 'VIP' })).toBe('shield')
+  it('picks the key by crate kind', () => {
+    expect(iconForProduct({ type: 'crate_key', slug: '1120635', name: 'Титульный кейс' })).toBe('key_title')
+    expect(iconForProduct({ type: 'crate_key', slug: '7', name: 'Ключ кейса косметики' })).toBe('key_cosmetic')
   })
 
-  it('maps an unknown/currency type to the gem icon', () => {
-    expect(iconForProduct({ type: 'currency', slug: 'gems-500', name: '500 кристаллов' })).toBe('gem')
-    expect(iconForProduct({ type: 'something_new', slug: 'x', name: 'X' })).toBe('gem')
+  it('maps titles and cosmetics', () => {
+    expect(iconForProduct({ type: 'title', slug: 't', name: 'Титул Хан' })).toBe('key_title')
+    expect(iconForProduct({ type: 'cosmetic', slug: 'c', name: 'Шляпа фермера' })).toBe('tubeteika')
+    expect(iconForProduct({ type: 'cosmetic', slug: 'c', name: 'Меч CATiers' })).toBe('claw')
   })
 
-  it('picks a cosmetic icon by keyword in the slug or name', () => {
-    expect(iconForProduct({ type: 'cosmetic', slug: 'farmer-hat', name: 'Шляпа фермера' })).toBe('hat')
-    expect(iconForProduct({ type: 'cosmetic', slug: 'butterfly-wings', name: 'Крылья бабочки' })).toBe('wings')
-    expect(iconForProduct({ type: 'cosmetic', slug: 'sword-trail', name: 'Эффект меча' })).toBe('sword')
-    expect(iconForProduct({ type: 'cosmetic', slug: 'dragon-pet', name: 'Питомец-дракон' })).toBe('pet')
+  it('falls back to the crate for an unknown type', () => {
+    expect(iconForProduct({ type: 'something_new', slug: 'x', name: 'X' })).toBe('crate')
+  })
+})
+
+describe('iconUrl', () => {
+  it('serves known icons from /icons', () => {
+    expect(iconUrl('claw')).toBe('/icons/claw.png')
   })
 
-  it('falls back to hat for a cosmetic with no recognizable keyword', () => {
-    expect(iconForProduct({ type: 'cosmetic', slug: 'mystery-item', name: 'Загадочный предмет' })).toBe('hat')
+  it('maps icon names saved in old carts', () => {
+    expect(iconUrl('shield')).toBe('/icons/crown_cat.png')
+    expect(iconUrl('gem')).toBe('/icons/claw.png')
+    expect(iconUrl('nonsense')).toBe('/icons/crate.png')
   })
 })

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PublicProduct } from '~/composables/useCatalogApi'
 import { useCart } from '~/composables/useCart'
-import { approxKzt, formatPrice } from '~/utils/formatPrice'
+import { formatKzt, formatPrice, rubToKzt } from '~/utils/formatPrice'
 import { iconForProduct } from '~/utils/productIcon'
 
 const props = defineProps<{ product: PublicProduct }>()
@@ -31,10 +31,10 @@ onBeforeUnmount(() => clearTimeout(resetTimer))
 
 <template>
   <article class="card">
-    <svg class="ico"><use :href="`#ic-${icon}`" /></svg>
+    <ItemIcon class="ico" :icon="icon" :size="112" />
     <h3>{{ product.name }}</h3>
     <p v-if="product.description" class="desc">{{ product.description }}</p>
-    <span class="price">{{ formatPrice(product.price) }} ₽ <i>{{ approxKzt(product.price, kztPerRub) }}</i></span>
+    <span class="price">{{ formatKzt(rubToKzt(product.price, kztPerRub)) }} <i>к оплате {{ formatPrice(product.price) }} ₽</i></span>
     <button class="add" @click="addToCart">
       <svg><use href="#ic-cart" /></svg>{{ justAdded ? 'Добавлено' : 'Купить' }}
     </button>

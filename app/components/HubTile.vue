@@ -11,7 +11,7 @@ defineProps<{
 
 <template>
   <NuxtLink class="hub-tile" :to="to">
-    <svg class="ico"><use :href="`#ic-${icon}`" /></svg>
+    <ItemIcon class="ico" :icon="icon" :size="104" />
     <div>
       <h3>{{ title }}</h3>
       <span class="cnt">{{ count }} {{ pluralizeProducts(count) }}</span>

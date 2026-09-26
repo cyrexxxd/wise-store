@@ -13,10 +13,10 @@ const { products, pending, error } = useCatalogProducts()
 const counts = computed(() => countByType(products.value))
 
 const allSections = computed(() => [
-  { to: '/roles', icon: 'shield', title: 'Роли', count: counts.value[PRODUCT_TYPE.Rank] ?? 0 },
-  { to: '/titles', icon: 'title', title: 'Титулы', count: counts.value[PRODUCT_TYPE.Title] ?? 0 },
-  { to: '/cosmetics', icon: 'hat', title: 'Косметика', count: counts.value[PRODUCT_TYPE.Cosmetic] ?? 0 },
-  { to: '/currency', icon: 'gem', title: 'Кристаллы', count: counts.value[PRODUCT_TYPE.Currency] ?? 0 },
+  { to: '/roles', icon: 'crown_premium', title: 'Роли', count: counts.value[PRODUCT_TYPE.Rank] ?? 0 },
+  { to: '/titles', icon: 'key_title', title: 'Титулы', count: counts.value[PRODUCT_TYPE.Title] ?? 0 },
+  { to: '/cosmetics', icon: 'tubeteika', title: 'Косметика', count: counts.value[PRODUCT_TYPE.Cosmetic] ?? 0 },
+  { to: '/currency', icon: 'claw', title: 'Когти', count: counts.value[PRODUCT_TYPE.Currency] ?? 0 },
   { to: '/crates', icon: 'crate', title: 'Кейсы', count: counts.value[PRODUCT_TYPE.CrateKey] ?? 0 },
 ])
 
