@@ -11,16 +11,54 @@ const { kztPerRub } = useRuntimeConfig().public
 // способы оплаты, подключённые на сервере; Kaspi — по умолчанию (большинство покупателей из Казахстана)
 const { data: methods } = useFetch<{ kaspi: boolean; card: boolean }>('/api/checkout/methods', { key: 'checkout-methods', server: false })
 const method = ref<'kaspi' | 'card'>('kaspi')
+// номер Kaspi: 10 цифр после «+7» (747 131 14 61); точную проверку делает сервер (normalizeKzPhone)
 const phone = ref('')
 watch(methods, (m) => { if (m && !m.kaspi && m.card) method.value = 'card' })
 const methodReady = computed(() => (method.value === 'kaspi' ? methods.value?.kaspi : methods.value?.card) ?? false)
-// быстрая проверка в браузере (10–11 цифр); точную делает сервер (normalizeKzPhone)
-const phoneOk = computed(() => method.value !== 'kaspi' || [10, 11].includes(phone.value.replace(/\D/g, '').length))
+
+function phoneDigits(raw: string, prev: string): string {
+  let d = raw.replace(/\D/g, '')
+  if (d.length > 10) {
+    // номер уже полный, дописали лишнюю цифру — оставляем как был
+    if (prev.length === 10 && d.startsWith(prev)) return prev
+    // вставили полный номер: +7 747…, 8 747…, 7 747…
+    if (d.startsWith('7') || d.startsWith('8')) d = d.slice(1)
+  }
+  return d.slice(0, 10)
+}
+function formatPhone(d: string): string {
+  return [d.slice(0, 3), d.slice(3, 6), d.slice(6, 8), d.slice(8, 10)].filter(Boolean).join(' ')
+}
+const phoneShown = computed(() => formatPhone(phone.value))
+// вставили 12+ цифр — это номер карты, а не телефон
+const cardLike = ref(false)
+function onPhoneInput(event: Event) {
+  const input = event.target as HTMLInputElement
+  const raw = input.value.replace(/\D/g, '')
+  cardLike.value = raw.length >= 12 && !(phone.value.length === 10 && raw.startsWith(phone.value))
+  phone.value = cardLike.value ? '' : phoneDigits(input.value, phone.value)
+  input.value = phoneShown.value
+}
+const phoneOk = computed(() => method.value !== 'kaspi' || (phone.value.length === 10 && phone.value.startsWith('7')))
+const phoneHint = computed(() => {
+  if (method.value !== 'kaspi') return null
+  if (cardLike.value) return 'Это номер карты. Нужен номер телефона, к которому привязан Kaspi'
+  if (!phone.value || phoneOk.value) return null
+  return phone.value.startsWith('7') ? `Ещё ${10 - phone.value.length} цифр` : 'Номер казахстанский: после +7 идёт 7XX'
+})
 
 const isSubmitting = ref(false)
 const submitError = ref<string | null>(null)
 
-const canSubmit = computed(() => items.value.length > 0 && nick.value.trim().length > 0 && methodReady.value && phoneOk.value && !isSubmitting.value)
+const nickOk = computed(() => nick.value.trim().length > 0)
+const canSubmit = computed(() => items.value.length > 0 && nickOk.value && methodReady.value && phoneOk.value && !isSubmitting.value)
+const payLabel = computed(() => {
+  if (isSubmitting.value) return 'Оформляем…'
+  if (!methodReady.value) return 'Этот способ оплаты скоро откроется'
+  if (!nickOk.value) return 'Укажите ник в игре'
+  if (method.value === 'kaspi' && !phoneOk.value) return 'Укажите номер Kaspi'
+  return method.value === 'kaspi' ? 'Выставить счёт в Kaspi' : 'Перейти к оплате картой'
+})
 
 function errorMessage(error: unknown): string {
   const data = (error as { data?: { data?: { message?: unknown } } })?.data?.data
@@ -34,7 +72,7 @@ async function submitOrder() {
   try {
     const res = await $fetch<{ url?: string; pay?: string }>('/api/checkout', {
       method: 'POST',
-      body: { nick: nick.value.trim(), items: items.value.map((i) => ({ slug: i.slug, qty: i.qty })), method: method.value, phone: phone.value },
+      body: { nick: nick.value.trim(), items: items.value.map((i) => ({ slug: i.slug, qty: i.qty })), method: method.value, phone: method.value === 'kaspi' ? `+7${phone.value}` : '' },
     })
     if (res.pay) {
       close()
@@ -141,8 +179,21 @@ onBeforeUnmount(() => {
         </div>
         <div v-if="method === 'kaspi'" class="nick-field">
           <label for="kaspi-phone">Номер Kaspi</label>
-          <input id="kaspi-phone" v-model="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="8 7XX XXX XX XX">
-          <small>На этот номер придёт счёт в приложении Kaspi. Сам номер мы не сохраняем.</small>
+          <div class="phone-input" :class="{ bad: phoneHint }">
+            <span class="cc">+7</span>
+            <input
+              id="kaspi-phone"
+              :value="phoneShown"
+              type="tel"
+              inputmode="numeric"
+              autocomplete="tel-national"
+              placeholder="7XX XXX XX XX"
+              @input="onPhoneInput"
+              @change="onPhoneInput"
+            >
+          </div>
+          <small v-if="phoneHint" class="phone-hint">{{ phoneHint }}</small>
+          <small>Номер телефона, к которому привязан Kaspi (не номер карты). Счёт придёт в приложение Kaspi. Сам номер мы не сохраняем.</small>
         </div>
         <div class="totals">
           <div><span class="k">Позиций</span><span class="v">{{ count }}</span></div>
@@ -151,7 +202,7 @@ onBeforeUnmount(() => {
         </div>
         <p v-if="submitError" class="cart-error">{{ submitError }}</p>
         <button class="pay" :disabled="!canSubmit" @click="submitOrder">
-          {{ isSubmitting ? 'Оформляем…' : !methodReady ? 'Этот способ оплаты скоро откроется' : method === 'kaspi' ? 'Выставить счёт в Kaspi' : 'Перейти к оплате картой' }}
+          {{ payLabel }}
         </button>
         <p class="note">Kaspi — счёт по номеру через ApiPay, оплата в приложении Kaspi. Карта — через Robokassa, в тенге; сумму в другой валюте пересчитывает ваш банк.<br>Нажимая кнопку, вы соглашаетесь с <NuxtLink to="/offer" @click="close">офертой</NuxtLink>.</p>
       </div>

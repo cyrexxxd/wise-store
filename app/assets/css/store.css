@@ -485,6 +485,12 @@
   .nick-field input { width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: var(--f-mono); font-size: 0.9rem; padding: 11px 12px; }
   .nick-field input:focus { outline: none; border-color: var(--accent); }
   .nick-field small { display: block; margin-top: 6px; font-size: 0.76rem; color: var(--muted); }
+  .phone-input { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 9px; }
+  .phone-input:focus-within { border-color: var(--accent); }
+  .phone-input.bad { border-color: #ff6b6b; }
+  .phone-input .cc { padding: 0 10px 0 14px; align-self: stretch; display: flex; align-items: center; border-right: 1px solid var(--line); font-family: var(--f-mono); font-size: 0.95rem; color: var(--ink-2); }
+  .nick-field .phone-input input { border: 0; background: none; padding: 11px 12px 11px 12px; font-size: 0.95rem; letter-spacing: 0.04em; }
+  .nick-field .phone-hint { color: #ff6b6b; }
 
   .totals { display: flex; flex-direction: column; gap: 6px; }
   .totals div { display: flex; justify-content: space-between; align-items: baseline; }
