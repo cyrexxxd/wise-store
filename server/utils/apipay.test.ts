@@ -1,6 +1,6 @@
 import { createHmac } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
-import { ApipayError, apipayUserMessage, createInvoice, createInvoiceSafely, getInvoice, invoiceDescription, invoiceForLog, maskPhone, normalizeKzPhone, phoneHash, verifyWebhook, type ApipayConfig } from './apipay'
+import { ApipayError, apipayUserMessage, createInvoice, createInvoiceSafely, getInvoice, invoiceDescription, invoiceForLog, kaspiQrLink, maskPhone, normalizeKzPhone, phoneHash, verifyWebhook, type ApipayConfig } from './apipay'
 
 const cfg: ApipayConfig = { apiKey: 'key-123', webhookSecret: 'whsec', sandbox: true }
 
@@ -96,6 +96,13 @@ describe('createInvoiceSafely', () => {
     expect(calls).toBe(1)
     expect(apipayUserMessage(new ApipayError('x', 409, 'kaspi_session_expired'))).toMatch(/временно недоступен/)
     expect(apipayUserMessage(new ApipayError('x', 409, 'duplicate_idempotency_key'))).toMatch(/уже выставлен/)
+  })
+
+  it('passes only https kaspi.kz links to the QR on the pay page', () => {
+    expect(kaspiQrLink({ kaspi_qr_link: 'https://kaspi.kz/qr/pay?tranId=QR13234689513' })).toBe('https://kaspi.kz/qr/pay?tranId=QR13234689513')
+    for (const bad of [null, undefined, '', 'http://kaspi.kz/qr/pay?tranId=1', 'https://kaspi.kz.evil.com/x', 'https://evil.com/?kaspi.kz', 'javascript:alert(1)', 'https://kaspi.kz/' + 'a'.repeat(400)]) {
+      expect(kaspiQrLink({ kaspi_qr_link: bad as string | null })).toBeNull()
+    }
   })
 
   it('hashes the phone and strips personal data from stored invoices', () => {

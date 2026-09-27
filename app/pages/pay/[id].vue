@@ -9,7 +9,8 @@ useSeoMeta({ title: 'Оплата в Kaspi', robots: 'noindex' })
 const route = useRoute()
 const id = String(route.params.id)
 const token = String(route.query.t ?? '')
-interface OrderState { invId: number; state: 'pending' | 'paid' | 'failed' | 'refunded'; providerStatus: string | null; amount: number; test: boolean }
+// qrLink/qrSvg — ссылка Kaspi на этот же счёт и QR из неё (сервер отдаёт их, пока заказ ждёт оплаты)
+interface OrderState { invId: number; state: 'pending' | 'paid' | 'failed' | 'refunded'; providerStatus: string | null; amount: number; test: boolean; qrLink?: string | null; qrSvg?: string | null }
 const order = ref<OrderState | null>(null)
 const notFound = ref(false)
 let timer: ReturnType<typeof setTimeout> | undefined
@@ -50,8 +51,18 @@ onBeforeUnmount(() => clearTimeout(timer))
         <li>Проверьте сумму и оплатите. Счёт действует 24 часа.</li>
         <li>Эта страница обновится сама — покупка придёт в игру за несколько минут.</li>
       </ol>
-      <p class="hint">Счёт не пришёл? Проверьте номер в Kaspi → «Мои платежи» → «Счета». Страницу можно закрыть:
-        сайт сам проверяет оплату, и покупка будет выдана автоматически.</p>
+      <div class="kaspi-qr">
+        <h3>Или оплатите по QR</h3>
+        <template v-if="order?.qrLink">
+          <!-- SVG собирает сервер (uqr) из проверенной ссылки https://kaspi.kz/… -->
+          <div class="qr-box" role="img" aria-label="QR-код для оплаты в Kaspi" v-html="order.qrSvg" />
+          <p>Отсканируйте камерой телефона или в приложении Kaspi.kz → «Kaspi QR». Это тот же счёт — второй раз платить не нужно.</p>
+          <a class="btn btn-pink" :href="order.qrLink" target="_blank" rel="noopener noreferrer">Открыть в Kaspi</a>
+        </template>
+        <p v-else class="qr-wait">QR появится здесь через несколько секунд, как только Kaspi примет счёт.</p>
+      </div>
+      <p class="hint">Счёт не пришёл? Проверьте номер в Kaspi → «Мои платежи» → «Счета» или оплатите по QR выше. Страницу можно
+        закрыть: сайт сам проверяет оплату, и покупка будет выдана автоматически.</p>
     </div>
 
     <div v-else-if="order.state === 'paid'" class="kaspi-done">

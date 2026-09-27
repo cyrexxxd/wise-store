@@ -58,6 +58,20 @@ export interface ApipayInvoice {
   /** Полный возврат: статус остаётся paid (статуса refunded у ApiPay нет). */
   is_fully_refunded?: boolean
   total_refunded?: string
+  /** Ссылка на оплату этого счёта по QR (https://kaspi.kz/qr/pay?tranId=…); null в processing и в песочнице. */
+  kaspi_qr_link?: string | null
+}
+
+/// Ссылка Kaspi для QR на странице оплаты — только https://kaspi.kz/…, иначе null (не рисуем покупателю чужой адрес).
+export function kaspiQrLink(inv: Pick<ApipayInvoice, 'kaspi_qr_link'>): string | null {
+  const link = inv.kaspi_qr_link
+  if (typeof link !== 'string' || link.length > 300) return null
+  try {
+    const u = new URL(link)
+    return u.protocol === 'https:' && u.hostname === 'kaspi.kz' ? u.toString() : null
+  } catch {
+    return null
+  }
 }
 
 /// Что из счёта сохраняем в заказ: без номера телефона и имени покупателя (client_phone, client_name, phone_number).
