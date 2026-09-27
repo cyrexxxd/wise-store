@@ -53,8 +53,13 @@ export function sectionTitle(key: string): string {
 /// Как получить предмет: кейс, покупка за Когти в /cos, роль CAT.
 export function howToGet(type: string, item: CosmeticItem): string[] {
   if (type === 'title') return item.crate ? ['Кейс титулов'] : ['Архивный: только у получивших раньше']
-  return ['Кейс косметики', `${shopPrices[item.rarity]} Когтей навсегда`, 'Роль CAT — пока действует']
+  const role = item.rarity === 'LEGENDARY' ? 'Роль Wise или Premium — пока действует' : 'Роль CAT и выше — пока действует'
+  const ways = [`${shopPrices[item.rarity]} Когтей навсегда`, role]
+  return cosmeticCrateTypes.has(type) ? ['Кейс косметики', ...ways] : ways
 }
+
+// разделы, которые выпадают из кейса косметики (сейчас шляпы и скины меча) — по выгрузке из плагина
+const cosmeticCrateTypes = new Set((crates.find((c) => c.key === 'cosmetic')?.items ?? []).map((i) => i.type))
 
 /// Шанс в процентах для показа: 0.0625 → «0.06%», 3.75 → «3.75%».
 export function formatChance(chance: number): string {

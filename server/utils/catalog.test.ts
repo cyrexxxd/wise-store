@@ -56,10 +56,10 @@ describe('deliveryCommands', () => {
 })
 
 describe('role bonuses', () => {
-  it('Wise gives +150 and Premium +400 Claws with every purchase, CAT none', () => {
+  it('CAT +100, Wise +250, Premium +500 Claws with every purchase (owner 28.09)', () => {
     const bonus = (slug: string) => CATALOG.find((p) => p.slug === slug)!.deliver.filter((t) => t.startsWith('claws deliver'))
-    expect(bonus('role-cat')).toEqual([])
-    expect(bonus('role-wise')).toEqual(['claws deliver {nick} 150 wise-{delivery}'])
-    expect(bonus('role-premium')).toEqual(['claws deliver {nick} 400 wise-{delivery}'])
+    expect(bonus('role-cat')).toEqual(['claws deliver {nick} 100 wise-{delivery}'])
+    expect(bonus('role-wise')).toEqual(['claws deliver {nick} 250 wise-{delivery}'])
+    expect(bonus('role-premium')).toEqual(['claws deliver {nick} 500 wise-{delivery}'])
   })
 })

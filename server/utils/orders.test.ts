@@ -33,6 +33,7 @@ describe('markPaid', () => {
     const rows = await db.query<{ command: string }>('SELECT command FROM deliveries WHERE inv_id = $1 ORDER BY line_no', [invId])
     expect(rows.map((r) => r.command)).toEqual([
       'lp user {nick} parent addtemp cat 30d accumulate',
+      'claws deliver {nick} 100 wise-{delivery}',
       expect.stringMatching(/^tellraw \{nick\} /),
       'claws deliver {nick} 250 wise-{delivery}',
       'claws deliver {nick} 250 wise-{delivery}',
@@ -112,6 +113,7 @@ describe('test mode and online filter', () => {
     const got = await claimPending(db, 20, ['online_1', 'SomeoneElse'])       // регистр ника не важен
     expect(got.map((d) => d.command)).toEqual([
       'lp user {nick} parent addtemp cat 30d accumulate',
+      'claws deliver {nick} 100 wise-{delivery}',
       expect.stringMatching(/^tellraw /),
     ])
     const [typo] = await db.query<{ status: string; attempts: number }>("SELECT status, attempts FROM deliveries WHERE nick = 'Typo_nick'")
@@ -133,7 +135,7 @@ describe('ApiPay (Kaspi) orders', () => {
     const { invId } = await kaspiOrder()
     expect(await applyApipayInvoice(db, paidInv({ external_order_id: String(invId) }), { sandbox: false, allowTestDelivery: false })).toBe('paid')
     expect(await applyApipayInvoice(db, paidInv(), { sandbox: false, allowTestDelivery: false })).toBe('already_paid')
-    expect((await db.query('SELECT 1 FROM deliveries')).length).toBe(2)          // lp + tellraw
+    expect((await db.query('SELECT 1 FROM deliveries')).length).toBe(3)          // lp + 100 Когтей + tellraw
   })
 
   it('a sandbox invoice never delivers, even for a live-mode order', async () => {
@@ -173,7 +175,7 @@ describe('ApiPay review fixes', () => {
   it('a REAL payment is delivered even if the site setting still says sandbox', async () => {
     await kaspiOrder()
     expect(await applyApipayInvoice(db, inv(), opts)).toBe('paid')
-    expect((await db.query('SELECT 1 FROM deliveries')).length).toBe(2)
+    expect((await db.query('SELECT 1 FROM deliveries')).length).toBe(3)          // lp + 100 Когтей + tellraw
   })
 
   it('an invoice without is_sandbox is treated as test (no delivery)', async () => {
