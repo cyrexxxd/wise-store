@@ -32,6 +32,11 @@ CREATE TABLE IF NOT EXISTS orders (
   result_raw  JSONB
 );
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS is_test BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS provider TEXT NOT NULL DEFAULT 'robokassa';
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS provider_ref TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS provider_status TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS public_token UUID NOT NULL DEFAULT gen_random_uuid();
+CREATE UNIQUE INDEX IF NOT EXISTS orders_provider_ref ON orders (provider, provider_ref) WHERE provider_ref IS NOT NULL;
 CREATE TABLE IF NOT EXISTS deliveries (
   id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   inv_id       INTEGER NOT NULL REFERENCES orders(inv_id),
@@ -52,12 +57,53 @@ export async function ensureSchema(db: Db): Promise<void> {
   for (const stmt of SCHEMA.split(';').map((s) => s.trim()).filter(Boolean)) await db.query(stmt)
 }
 
-export async function createOrder(db: Db, nick: string, lines: readonly CheckoutLine[], totalKzt: number, isTest: boolean): Promise<number> {
-  const rows = await db.query<{ inv_id: number }>(
-    'INSERT INTO orders (nick, items, amount_kzt, is_test) VALUES ($1, $2::jsonb, $3, $4) RETURNING inv_id',
-    [nick, JSON.stringify(lines), totalKzt, isTest],
+export type Provider = 'robokassa' | 'apipay'
+
+/// Новый заказ. token — секрет страницы ожидания оплаты (номер заказа последовательный, по нему одному статус не отдаём).
+export async function createOrder(db: Db, nick: string, lines: readonly CheckoutLine[], totalKzt: number, isTest: boolean,
+  provider: Provider = 'robokassa'): Promise<{ invId: number; token: string }> {
+  const rows = await db.query<{ inv_id: number; public_token: string }>(
+    'INSERT INTO orders (nick, items, amount_kzt, is_test, provider) VALUES ($1, $2::jsonb, $3, $4, $5) RETURNING inv_id, public_token::text AS public_token',
+    [nick, JSON.stringify(lines), totalKzt, isTest, provider],
   )
-  return Number(rows[0]!.inv_id)
+  return { invId: Number(rows[0]!.inv_id), token: rows[0]!.public_token }
+}
+
+/// Счёт у платёжного сервиса выставлен — запомнить его id (для вебхука и сверки статуса).
+export async function setProviderRef(db: Db, invId: number, ref: string, status: string | null): Promise<void> {
+  await db.query('UPDATE orders SET provider_ref = $2, provider_status = $3 WHERE inv_id = $1', [invId, ref, status])
+}
+
+export async function setProviderStatus(db: Db, invId: number, status: string): Promise<void> {
+  await db.query('UPDATE orders SET provider_status = $2 WHERE inv_id = $1', [invId, status])
+}
+
+export interface OrderView {
+  invId: number
+  status: string
+  provider: Provider
+  providerRef: string | null
+  providerStatus: string | null
+  amountKzt: number
+  isTest: boolean
+  createdAt: string
+}
+
+const ORDER_VIEW = `inv_id, status, provider, provider_ref, provider_status, amount_kzt, is_test, created_at::text AS created_at`
+const toView = (r: Record<string, unknown>): OrderView => ({
+  invId: Number(r.inv_id), status: String(r.status), provider: r.provider as Provider, providerRef: (r.provider_ref as string) ?? null,
+  providerStatus: (r.provider_status as string) ?? null, amountKzt: Number(r.amount_kzt), isTest: Boolean(r.is_test), createdAt: String(r.created_at),
+})
+
+/// Заказ для страницы ожидания оплаты — только по паре (номер, секретный токен).
+export async function orderByToken(db: Db, invId: number, token: string): Promise<OrderView | null> {
+  const rows = await db.query(`SELECT ${ORDER_VIEW} FROM orders WHERE inv_id = $1 AND public_token = $2::uuid`, [invId, token])
+  return rows[0] ? toView(rows[0]) : null
+}
+
+export async function orderByProviderRef(db: Db, provider: Provider, ref: string): Promise<OrderView | null> {
+  const rows = await db.query(`SELECT ${ORDER_VIEW} FROM orders WHERE provider = $1 AND provider_ref = $2`, [provider, ref])
+  return rows[0] ? toView(rows[0]) : null
 }
 
 export type PaidResult = 'paid' | 'paid_test' | 'already_paid' | 'unknown_order' | 'amount_mismatch' | 'refunded'
@@ -66,19 +112,22 @@ export type PaidResult = 'paid' | 'paid_test' | 'already_paid' | 'unknown_order'
 /// выдачи. Повтор уведомления — already_paid без новых строк (блокировка строки + UNIQUE(inv_id, line_no)).
 /// Тестовый заказ — paid_test: оплачен, но строк выдачи нет (если не allowTestDelivery).
 export async function markPaid(db: Db, invId: number, outSum: string, raw: Record<string, unknown>,
-  opts: { allowTestDelivery?: boolean } = {}): Promise<PaidResult> {
+  opts: { allowTestDelivery?: boolean; provider?: Provider; forceTest?: boolean } = {}): Promise<PaidResult> {
   return db.tx(async (q) => {
-    const rows = await q.query<{ nick: string; items: unknown; amount_kzt: string; status: string; is_test: boolean }>(
-      'SELECT nick, items, amount_kzt, status, is_test FROM orders WHERE inv_id = $1 FOR UPDATE',
+    const rows = await q.query<{ nick: string; items: unknown; amount_kzt: string; status: string; is_test: boolean; provider: string }>(
+      'SELECT nick, items, amount_kzt, status, is_test, provider FROM orders WHERE inv_id = $1 FOR UPDATE',
       [invId],
     )
     const order = rows[0]
     if (!order) return 'unknown_order'
+    // уведомление одного платёжного сервиса не может оплатить заказ, выставленный через другой
+    if (opts.provider && order.provider !== opts.provider) return 'unknown_order'
     if (!sameAmount(outSum, Number(order.amount_kzt))) return 'amount_mismatch'
     if (order.status === 'paid') return 'already_paid'
     if (order.status === 'refunded') return 'refunded'
     await q.query("UPDATE orders SET status = 'paid', paid_at = now(), result_raw = $2::jsonb WHERE inv_id = $1", [invId, JSON.stringify(raw)])
-    if (order.is_test && !opts.allowTestDelivery) return 'paid_test'
+    // тестовый заказ или тестовая (песочная) оплата — без выдачи
+    if ((order.is_test || opts.forceTest) && !opts.allowTestDelivery) return 'paid_test'
     const lines = (typeof order.items === 'string' ? JSON.parse(order.items) : order.items) as CheckoutLine[]
     for (const cmd of deliveryCommands(lines)) {
       await q.query(

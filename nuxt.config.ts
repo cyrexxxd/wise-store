@@ -74,6 +74,15 @@ export default defineNuxtConfig({
       // 1 — тестовый режим (IsTest=1, тестовые пароли), 0 — боевые платежи
       test: '1',
     },
+    // ApiPay.kz — оплата через Kaspi (счёт по номеру телефона). Ключ и секрет вебхука — из кабинета ApiPay.
+    apipay: {
+      apiKey: '',
+      webhookSecret: '',
+      // 1 — песочница: счета не настоящие, заказы тестовые и без выдачи; 0 — боевой режим (после одобрения анкеты)
+      sandbox: '1',
+      // только для локального стенда (мок ApiPay); на Render не задавать
+      baseUrl: '',
+    },
     databaseUrl: '',
     // токен плагина WiseDelivery (X-Server-Token), не короче 32 символов
     deliveryServerToken: '',

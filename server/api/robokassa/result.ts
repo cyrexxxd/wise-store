@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
   const { SignatureValue: _s, ...raw } = fields
   // тестовый заказ выдачу не получает; на локальном стенде это включается NUXT_DELIVERY_ALLOW_TEST=1
   const allowTestDelivery = String(useRuntimeConfig().deliveryAllowTest) === '1'
-  const result = await markPaid(db, n.invId, n.outSum, raw, { allowTestDelivery })
+  const result = await markPaid(db, n.invId, n.outSum, raw, { allowTestDelivery, provider: 'robokassa' })
   if (result === 'unknown_order' || result === 'amount_mismatch') {
     console.error(`[robokassa] заказ ${n.invId}: ${result}, OutSum=${n.outSum} — сверить вручную`)
     throw createError({ statusCode: 400, statusMessage: result })

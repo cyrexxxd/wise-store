@@ -1,7 +1,9 @@
 import { PGlite } from '@electric-sql/pglite'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { validateCheckout } from './catalog'
-import { claimPending, confirmDelivery, createOrder, ensureSchema, markPaid, type Db } from './orders'
+import type { ApipayInvoice } from './apipay'
+import { applyApipayInvoice } from './apipaySync'
+import { claimPending, confirmDelivery, createOrder, ensureSchema, markPaid, orderByToken, setProviderRef, type Db } from './orders'
 
 function pgliteDb(pg: PGlite): Db {
   const wrap = (run: (text: string, params?: unknown[]) => Promise<{ rows: unknown[] }>): Db => ({
@@ -20,7 +22,7 @@ beforeEach(async () => {
 async function order(items: Array<{ slug: string; qty: number }>, nick = 'Notch', isTest = false) {
   const v = validateCheckout(nick, items)
   if (!v.ok) throw new Error(v.message)
-  return { invId: await createOrder(db, v.nick, v.lines, v.total, isTest), total: v.total }
+  return { invId: (await createOrder(db, v.nick, v.lines, v.total, isTest)).invId, total: v.total }
 }
 
 describe('markPaid', () => {
@@ -114,5 +116,45 @@ describe('test mode and online filter', () => {
     ])
     const [typo] = await db.query<{ status: string; attempts: number }>("SELECT status, attempts FROM deliveries WHERE nick = 'Typo_nick'")
     expect(typo).toEqual({ status: 'pending', attempts: 0 })                // не тронута, очередь не забивает
+  })
+})
+
+describe('ApiPay (Kaspi) orders', () => {
+  async function kaspiOrder(isTest = false) {
+    const v = validateCheckout('Notch', [{ slug: 'role-cat', qty: 1 }])
+    if (!v.ok) throw new Error(v.message)
+    const { invId, token } = await createOrder(db, v.nick, v.lines, v.total, isTest, 'apipay')
+    await setProviderRef(db, invId, '555', 'processing')
+    return { invId, token }
+  }
+  const paidInv = (over: Partial<ApipayInvoice> = {}): ApipayInvoice => ({ id: 555, amount: '1599.00', status: 'paid', external_order_id: undefined, is_sandbox: false, ...over })
+
+  it('a paid Kaspi invoice pays the order once and queues delivery', async () => {
+    const { invId } = await kaspiOrder()
+    expect(await applyApipayInvoice(db, paidInv({ external_order_id: String(invId) }), { sandbox: false, allowTestDelivery: false })).toBe('paid')
+    expect(await applyApipayInvoice(db, paidInv(), { sandbox: false, allowTestDelivery: false })).toBe('already_paid')
+    expect((await db.query('SELECT 1 FROM deliveries')).length).toBe(2)          // lp + tellraw
+  })
+
+  it('a sandbox invoice never delivers, even for a live-mode order', async () => {
+    await kaspiOrder()
+    expect(await applyApipayInvoice(db, paidInv({ is_sandbox: true }), { sandbox: false, allowTestDelivery: false })).toBe('paid_test')
+    expect((await db.query('SELECT 1 FROM deliveries')).length).toBe(0)
+  })
+
+  it('rejects wrong amount, unknown invoice and a mismatched order id; stores intermediate statuses', async () => {
+    const { invId, token } = await kaspiOrder()
+    expect(await applyApipayInvoice(db, paidInv({ amount: '1.00' }), { sandbox: false, allowTestDelivery: false })).toBe('amount_mismatch')
+    expect(await applyApipayInvoice(db, paidInv({ id: 999 }), { sandbox: false, allowTestDelivery: false })).toBe('unknown_invoice')
+    expect(await applyApipayInvoice(db, paidInv({ external_order_id: '12345' }), { sandbox: false, allowTestDelivery: false })).toBe('unknown_invoice')
+    expect(await applyApipayInvoice(db, paidInv({ status: 'expired' }), { sandbox: false, allowTestDelivery: false })).toBe('status_saved')
+    const view = await orderByToken(db, invId, token)
+    expect(view).toMatchObject({ status: 'pending', provider: 'apipay', providerStatus: 'expired' })
+    expect(await orderByToken(db, invId, '00000000-0000-0000-0000-000000000000')).toBeNull()
+  })
+
+  it('a Robokassa notification cannot pay a Kaspi order', async () => {
+    const { invId } = await kaspiOrder()
+    expect(await markPaid(db, invId, '1599.00', {}, { provider: 'robokassa' })).toBe('unknown_order')
   })
 })
