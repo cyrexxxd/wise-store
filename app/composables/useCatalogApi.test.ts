@@ -9,7 +9,6 @@ function makeProduct(overrides: Partial<PublicProduct> = {}): PublicProduct {
     type: 'title',
     price: 490,
     currency: 'KZT',
-    imageKey: null,
     sortOrder: 0,
     ...overrides,
   }

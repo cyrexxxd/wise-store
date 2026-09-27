@@ -1,63 +1,61 @@
 <script setup lang="ts">
-// Кейсы (crates.html → T-15). Верхняя сетка — товары типа crate_key (ключи кейсов,
-// покупаются как обычный товар). Нижняя секция "Шансы" — отдельный публичный эндпоинт
-// GET /api/catalog/crates: шансы публикуются открыто (раздел 6 плана), а не берутся из
-// текста товара.
-import { PRODUCT_TYPE, useCatalogCrates, useCatalogProductsByType } from '~/composables/useCatalogApi'
+// Кейсы: шанс на каждый предмет. Правило то же, что в плагине (CrateRoller): сначала редкость по весам,
+// потом равномерно среди предметов этой редкости. Данные — выгрузка из плагина (app/data/cosmetics.json).
+import { crates, formatChance, RARITIES, RARITY_INFO, sectionTitle, type Crate, type Rarity } from '~/utils/cosmetics'
+import { itemIcon } from '~/utils/productIcon'
 
 useSeoMeta({
   title: 'Кейсы',
-  description: 'Кейсы сервера wise: один случайный предмет из набора за открытие. Шансы публикуются честно, без раскрасок задним числом.',
+  description: 'Кейс косметики и кейс титулов сервера CATIERS: шанс выпадения каждого предмета, как в игре.',
 })
 
-const { products, pending: productsPending, error: productsError } = useCatalogProductsByType(PRODUCT_TYPE.CrateKey)
-const { data: crates, pending: cratesPending, error: cratesError } = useCatalogCrates()
-
-function barColorFor(index: number, total: number): string {
-  // Тот же визуальный приём, что в crate.html: чем реже предмет, тем насыщеннее полоса.
-  const ratio = total > 1 ? index / (total - 1) : 0
-  if (ratio < 0.34) return 'rgba(140,109,255,.28)'
-  if (ratio < 0.67) return 'rgba(140,109,255,.5)'
-  return 'var(--accent-hi)'
-}
+const CRATE_ICON: Record<string, string> = { cosmetic: 'crate', title: 'crate_title' }
+const KEY_ICON: Record<string, string> = { cosmetic: 'key_cosmetic', title: 'key_title' }
+const byRarity = (c: Crate) => [...RARITIES].reverse()
+  .map((r) => ({ rarity: r as Rarity, items: c.items.filter((i) => i.rarity === r) }))
+  .filter((g) => g.items.length)
+const active = ref(crates[0]?.key ?? 'cosmetic')
 </script>
 
 <template>
   <div>
     <section>
       <BackLink />
-      <div class="sec-head">
+      <div class="sec-head tone-crates">
         <h1>Кейсы</h1>
-        <p>Открытие выдаёт один случайный предмет из набора. Шансы — ниже, честно и без раскрасок задним числом.</p>
+        <p>Ключи покупаются в игре за Когти (<code>/cos</code>), кейсы стоят на спавне. Повторная награда возвращает часть Когтей.</p>
       </div>
-
-      <p v-if="productsError" class="grid-empty">Не получилось загрузить кейсы. Попробуйте обновить страницу.</p>
-      <div v-else class="grid">
-        <p v-if="!productsPending && !products.length" class="grid-empty">Пока нет кейсов в продаже.</p>
-        <ProductCard v-for="product in products" :key="product.slug" :product="product" />
+      <div class="crate-tabs">
+        <button v-for="c in crates" :key="c.key" class="crate-tab" :class="{ on: active === c.key, [`tone-${c.key === 'title' ? 'titles' : 'crates'}`]: true }" @click="active = c.key">
+          <ItemIcon :icon="CRATE_ICON[c.key] ?? 'crate'" :size="56" />
+          <span><b>{{ c.name }}</b><i>{{ c.items.length }} наград · ключ {{ c.keyPrice }} Когтей</i></span>
+        </button>
       </div>
     </section>
 
-    <section id="odds">
-      <div class="sec-head">
-        <h2>Шансы в кейсах</h2>
-        <p>Публикуем как есть — те же числа, что стоят в конфиге сервера. Сумма всегда равна 100%.</p>
-      </div>
-
-      <p v-if="cratesError" class="grid-empty">Не получилось загрузить шансы.</p>
-      <div v-else class="crate-wrap">
-        <div v-for="crate in crates" :key="crate.key" class="crate">
-          <h3>{{ crate.name }}</h3>
-          <p>{{ crate.items.length }} {{ crate.items.length === 1 ? 'предмет' : 'предметов' }}, один выпадает за открытие.</p>
-          <div class="odds">
-            <div v-for="(item, idx) in crate.items" :key="item.itemKey" class="odd">
-              <span class="nm">{{ item.displayName }}</span>
-              <span class="pc">{{ item.chance.toFixed(1) }}%</span>
-              <span class="bar"><i :style="{ width: `${item.chance}%`, background: barColorFor(idx, crate.items.length) }" /></span>
-            </div>
+    <section v-for="c in crates" v-show="active === c.key" :id="c.key" :key="c.key" class="crate-block" :class="`tone-${c.key === 'title' ? 'titles' : 'crates'}`">
+      <div class="crate-head">
+        <ItemIcon class="crate-art" :icon="CRATE_ICON[c.key] ?? 'crate'" :size="150" />
+        <div>
+          <h2>{{ c.name }}</h2>
+          <p class="crate-key"><ItemIcon :icon="KEY_ICON[c.key] ?? 'key_title'" :size="34" /> Ключ — {{ c.keyPrice }} Когтей</p>
+          <div class="rar-chips">
+            <span v-for="r in [...RARITIES].reverse().filter((x) => c.rarities[x])" :key="r" class="rar-chip" :style="{ '--r': RARITY_INFO[r].color }">
+              {{ RARITY_INFO[r].title }} <b>{{ c.rarities[r]!.chance }}%</b> <i>{{ c.rarities[r]!.count }} шт.</i>
+            </span>
           </div>
         </div>
-        <p v-if="!cratesPending && !crates?.length" class="grid-empty">Пока нет опубликованных кейсов.</p>
+      </div>
+
+      <div v-for="g in byRarity(c)" :key="g.rarity" class="odds-group" :style="{ '--r': RARITY_INFO[g.rarity].color }">
+        <h3>{{ RARITY_INFO[g.rarity].title }} <span>{{ c.rarities[g.rarity]!.chance }}% на редкость · {{ formatChance(g.items[0]!.chance) }} на предмет</span></h3>
+        <div class="odds-grid">
+          <div v-for="i in g.items" :key="i.type + i.id" class="odd-item">
+            <ItemIcon :icon="itemIcon(i.type, i.id)" :size="60" />
+            <span class="odd-name">{{ i.name }}<small v-if="c.key !== 'title'">{{ sectionTitle(i.type) }}</small></span>
+            <b class="odd-chance">{{ formatChance(i.chance) }}</b>
+          </div>
+        </div>
       </div>
     </section>
   </div>

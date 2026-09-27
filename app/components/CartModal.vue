@@ -1,19 +1,16 @@
 <script setup lang="ts">
 // Модалка корзины. "Перейти к оплате" отправляет ник и состав корзины на /api/checkout —
-// сервер Nuxt сверяет товары с каталогом EasyDonate, создаёт платёж и возвращает ссылку
-// на страницу оплаты EasyDonate, куда и уходит покупатель. Выдачу после оплаты делает
-// EasyDonate через плагин на сервере.
+// сервер Nuxt сверяет товары с каталогом, создаёт заказ и возвращает ссылку
+// на страницу оплаты Robokassa, куда и уходит покупатель. Выдачу после оплаты делает
+// плагин WiseDelivery на сервере.
 import { useCart } from '~/composables/useCart'
-import { formatKzt, formatPrice, rubToKzt } from '~/utils/formatPrice'
+import { approxRub, formatKzt } from '~/utils/formatPrice'
 
 const { items, nick, isOpen, count, total, changeQty, remove, close } = useCart()
 const { kztPerRub } = useRuntimeConfig().public
 
 const isSubmitting = ref(false)
 const submitError = ref<string | null>(null)
-
-// итог в тенге — сумма строк, как их видит покупатель; к оплате — рубли EasyDonate
-const totalKzt = computed(() => items.value.reduce((sum, i) => sum + rubToKzt(i.price, kztPerRub) * i.qty, 0))
 
 const canSubmit = computed(() => items.value.length > 0 && nick.value.trim().length > 0 && !isSubmitting.value)
 
@@ -93,7 +90,7 @@ onBeforeUnmount(() => {
           <span class="thumb"><ItemIcon :icon="item.icon" :size="40" /></span>
           <span class="info">
             <b>{{ item.name }}</b>
-            <span>{{ formatKzt(rubToKzt(item.price, kztPerRub)) }} за штуку</span>
+            <span>{{ formatKzt(item.price) }} за штуку</span>
           </span>
           <span class="right">
             <span class="qty">
@@ -101,7 +98,7 @@ onBeforeUnmount(() => {
               <span>{{ item.qty }}</span>
               <button aria-label="Больше" @click="changeQty(item.slug, 1)">+</button>
             </span>
-            <span class="sum">{{ formatKzt(rubToKzt(item.price, kztPerRub) * item.qty) }}</span>
+            <span class="sum">{{ formatKzt(item.price * item.qty) }}</span>
             <button class="rm" aria-label="Убрать" @click="remove(item.slug)">✕</button>
           </span>
         </div>
@@ -122,14 +119,14 @@ onBeforeUnmount(() => {
         </div>
         <div class="totals">
           <div><span class="k">Позиций</span><span class="v">{{ count }}</span></div>
-          <div class="grand"><span class="k">Итого</span><span class="v">{{ formatKzt(totalKzt) }}</span></div>
-          <div><span class="k">К оплате в рублях</span><span class="v">{{ formatPrice(total) }} ₽</span></div>
+          <div class="grand"><span class="k">К оплате</span><span class="v">{{ formatKzt(total) }}</span></div>
+          <div><span class="k">В рублях</span><span class="v">{{ approxRub(total, kztPerRub) }}</span></div>
         </div>
         <p v-if="submitError" class="cart-error">{{ submitError }}</p>
         <button class="pay" :disabled="!canSubmit" @click="submitOrder">
           {{ isSubmitting ? 'Переходим к оплате…' : 'Перейти к оплате' }}
         </button>
-        <p class="note">Цены в тенге по курсу {{ kztPerRub }} ₸ за рубль. Оплата — в рублях через сервис EasyDonate, способ оплаты выбирается на его странице; сумму в тенге при списании определяет ваш банк.<br>Нажимая кнопку, вы соглашаетесь с <NuxtLink to="/offer" @click="close">офертой</NuxtLink>.</p>
+        <p class="note">Оплата в тенге через Robokassa, способ оплаты выбирается на её странице. Сумму в рублях или другой валюте при списании пересчитывает ваш банк.<br>Нажимая кнопку, вы соглашаетесь с <NuxtLink to="/offer" @click="close">офертой</NuxtLink>.</p>
       </div>
     </div>
   </div>

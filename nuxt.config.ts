@@ -34,8 +34,10 @@ export default defineNuxtConfig({
   // T-34: заголовки безопасности на каждый ответ. HSTS выставляет сам Render на своём домене.
   //
   // connect-src — только свой origin: браузер ходит в /api/* этого же Nuxt-сервера, а тот уже
-  // в EasyDonate. Переход на страницу оплаты — обычная навигация, CSP её не ограничивает.
+  // в Postgres. Переход на страницу оплаты Robokassa — обычная навигация, CSP её не ограничивает.
   routeRules: {
+    // раздел титулов переехал в каталог косметики
+    '/titles': { redirect: { to: '/cosmetics?tab=title', statusCode: 301 } },
     '/**': {
       headers: {
         'X-Content-Type-Options': 'nosniff',
@@ -49,7 +51,7 @@ export default defineNuxtConfig({
           "script-src 'self' 'unsafe-inline'",
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src 'self' https://fonts.gstatic.com",
-          "img-src 'self' data: https://cdn.easydonate.ru",
+          "img-src 'self' data:",
           "connect-src 'self'",
           "frame-ancestors 'none'",
           "base-uri 'self'",
@@ -60,15 +62,26 @@ export default defineNuxtConfig({
   },
 
   // Приватные ключи — только на сервере Nuxt, в клиентский бандл не попадают.
-  // Задаются переменными окружения NUXT_EASYDONATE_SHOP_KEY, NUXT_EASYDONATE_SERVER_ID,
-  // NUXT_PUBLIC_SITE_URL, NUXT_PUBLIC_KZT_PER_RUB (см. .env.example).
+  // Задаются переменными окружения (см. .env.example): NUXT_ROBOKASSA_LOGIN/PASSWORD1/PASSWORD2/HASH/TEST,
+  // NUXT_DATABASE_URL, NUXT_DELIVERY_SERVER_TOKEN, NUXT_PUBLIC_SITE_URL, NUXT_PUBLIC_KZT_PER_RUB.
   runtimeConfig: {
-    easydonateShopKey: '',
-    easydonateServerId: '142066',
+    robokassa: {
+      login: '',
+      password1: '',
+      password2: '',
+      // алгоритм подписи из технических настроек магазина: md5 | sha256
+      hash: 'sha256',
+      // 1 — тестовый режим (IsTest=1, тестовые пароли), 0 — боевые платежи
+      test: '1',
+    },
+    databaseUrl: '',
+    // токен плагина WiseDelivery (X-Server-Token), не короче 32 символов
+    deliveryServerToken: '',
+    // 1 — выдавать и тестовые (IsTest) заказы: ТОЛЬКО локальный стенд, на Render не задавать
+    deliveryAllowTest: '',
     public: {
       siteUrl: 'https://wisepvp.net',
-      // Сколько тенге в рубле. Витрина показывает цены в тенге (основная валюта), пересчитывая
-      // рублёвую цену EasyDonate по этому курсу; платёж идёт в рублях, сумма в ₽ видна рядом.
+      // Сколько тенге в рубле — только для подсказки «≈ N ₽» под ценой; платёж идёт в тенге.
       kztPerRub: 5.3,
     },
   },

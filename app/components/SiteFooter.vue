@@ -18,7 +18,9 @@
           <h4>Разделы</h4>
           <ul>
             <li><NuxtLink to="/roles">Роли</NuxtLink></li>
+            <li><NuxtLink to="/currency">Когти</NuxtLink></li>
             <li><NuxtLink to="/crates">Кейсы</NuxtLink></li>
+            <li><NuxtLink to="/cosmetics">Косметика</NuxtLink></li>
           </ul>
         </div>
         <div>

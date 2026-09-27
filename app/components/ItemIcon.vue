@@ -1,6 +1,6 @@
 <script setup lang="ts">
-// Иконка товара — рендер игровой модели (см. utils/productIcon.ts). Декоративная: название
-// товара всегда рядом текстом, поэтому alt пустой.
+// Иконка товара или предмета — нарисованный SVG (см. utils/productIcon.ts). Декоративная: название
+// всегда рядом текстом, поэтому alt пустой.
 import { iconUrl } from '~/utils/productIcon'
 
 const props = defineProps<{ icon: string; size?: number }>()

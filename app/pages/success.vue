@@ -1,6 +1,6 @@
 <script setup lang="ts">
-// Сюда EasyDonate возвращает покупателя после оплаты (success_url в server/utils/easydonate.ts).
-// Страница только сообщает о выдаче — сам факт оплаты подтверждает и выдачу делает EasyDonate.
+// SuccessURL Robokassa. Страница только сообщает о выдаче: оплату подтверждает уведомление
+// ResultURL (server/api/robokassa/result.ts), выдачу делает плагин WiseDelivery на сервере.
 import { useCart } from '~/composables/useCart'
 
 useSeoMeta({ title: 'Спасибо за покупку', robots: 'noindex' })

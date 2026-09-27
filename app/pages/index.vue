@@ -1,42 +1,51 @@
 <script setup lang="ts">
-// Хаб каталога. Счётчики на плитках — из живого каталога EasyDonate; разделы без товаров
-// не показываются, чтобы не водить покупателя на пустые страницы.
-import { countByType, PRODUCT_TYPE, useCatalogProducts } from '~/composables/useCatalogApi'
+// Главная: баннер и разделы магазина, каждый в своём цвете.
+import { crates, sections } from '~/utils/cosmetics'
 
 useSeoMeta({
-  title: 'Каталог',
-  description: 'Официальный магазин сервера wise: роли и кейсы. Выдача на ник, указанный при оплате.',
+  title: 'Магазин',
+  description: 'Официальный магазин сервера CATIERS: роли, Когти, кейсы и косметика. Оплата в тенге, выдача на ник.',
 })
 
-const { products, pending, error } = useCatalogProducts()
-
-const counts = computed(() => countByType(products.value))
-
-const allSections = computed(() => [
-  { to: '/roles', icon: 'crown_premium', title: 'Роли', count: counts.value[PRODUCT_TYPE.Rank] ?? 0 },
-  { to: '/titles', icon: 'key_title', title: 'Титулы', count: counts.value[PRODUCT_TYPE.Title] ?? 0 },
-  { to: '/cosmetics', icon: 'tubeteika', title: 'Косметика', count: counts.value[PRODUCT_TYPE.Cosmetic] ?? 0 },
-  { to: '/currency', icon: 'claw', title: 'Когти', count: counts.value[PRODUCT_TYPE.Currency] ?? 0 },
-  { to: '/crates', icon: 'crate', title: 'Кейсы', count: counts.value[PRODUCT_TYPE.CrateKey] ?? 0 },
-])
-
-const sections = computed(() => allSections.value.filter((s) => s.count > 0))
+const cosmeticsCount = Object.values(sections).reduce((n, list) => n + list.length, 0)
+const tiles = [
+  { to: '/roles', icon: 'crown_premium', title: 'Роли', text: 'CAT, Wise и Premium — привилегии на 30 дней', tone: 'roles' },
+  { to: '/currency', icon: 'claws_4', title: 'Когти', text: 'Валюта сервера: ключи кейсов и косметика навсегда', tone: 'claws' },
+  { to: '/crates', icon: 'crate', title: 'Кейсы', text: `Шансы на каждый предмет — ${crates.reduce((n, c) => n + c.items.length, 0)} наград`, tone: 'crates' },
+  { to: '/cosmetics', icon: 'hat/wizard', title: 'Косметика', text: `Каталог: ${cosmeticsCount} предметов — титулы, шляпы, мечи, эффекты`, tone: 'cosmetics' },
+]
 </script>
 
 <template>
-  <section id="shop">
-    <div class="sec-head">
-      <h1>Каталог</h1>
-      <p>
-        Всё выдаётся на ник, указанный при оплате, в течение пары минут. Если вы не в сети —
-        покупка придёт автоматически при следующем входе на сервер. Шансы в кейсах — <NuxtLink class="text-link" to="/crates#odds">на странице кейсов</NuxtLink>.
-      </p>
-    </div>
+  <div>
+    <section class="hero">
+      <div class="hero-text">
+        <span class="hero-kicker">CATIERS · Центральная Азия</span>
+        <h1>Магазин <span class="grad">CATIERS</span></h1>
+        <p>Роли, Когти и косметика для PvP-сервера. Оплата в тенге через Robokassa, покупка приходит на ник, указанный в корзине — даже если ты не в сети.</p>
+        <div class="hero-cta">
+          <NuxtLink class="btn btn-gold" to="/roles">Выбрать роль</NuxtLink>
+          <NuxtLink class="btn btn-pink" to="/currency">Купить Когти</NuxtLink>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <ItemIcon class="art a1" icon="crown_premium" :size="190" />
+        <ItemIcon class="art a2" icon="claws_4" :size="150" />
+        <ItemIcon class="art a3" icon="crate_title" :size="130" />
+        <ItemIcon class="art a4" icon="swordskin/nz_aether" :size="120" />
+      </div>
+    </section>
 
-    <p v-if="error" class="grid-empty">Не получилось загрузить каталог. Попробуйте обновить страницу.</p>
-    <div v-else class="hub-grid">
-      <p v-if="!pending && !sections.length" class="grid-empty">Скоро здесь появятся товары.</p>
-      <HubTile v-for="s in sections" :key="s.to" :to="s.to" :icon="s.icon" :title="s.title" :count="s.count" />
-    </div>
-  </section>
+    <section id="shop">
+      <div class="hub-grid hub-4">
+        <NuxtLink v-for="t in tiles" :key="t.to" :to="t.to" class="hub-tile" :class="`tone-${t.tone}`">
+          <ItemIcon class="ico" :icon="t.icon" :size="112" />
+          <div>
+            <h3>{{ t.title }}</h3>
+            <span class="cnt">{{ t.text }}</span>
+          </div>
+        </NuxtLink>
+      </div>
+    </section>
+  </div>
 </template>

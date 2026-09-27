@@ -1,0 +1,10 @@
+# секреты и локальные файлы — не в git
+.env
+.env.*
+!.env.example
+node_modules/
+.nuxt/
+.output/
+.data/
+dist/
+*.log

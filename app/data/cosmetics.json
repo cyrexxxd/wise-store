@@ -1,0 +1,6177 @@
+{
+  "rarities": {
+    "COMMON": {
+      "color": "#B0B0B0",
+      "title": "Обычный"
+    },
+    "RARE": {
+      "color": "#4FA8FF",
+      "title": "Редкий"
+    },
+    "EPIC": {
+      "color": "#B45CFF",
+      "title": "Эпический"
+    },
+    "LEGENDARY": {
+      "color": "#FFB02E",
+      "title": "Легендарный"
+    }
+  },
+  "prices": {
+    "COMMON": 120,
+    "RARE": 250,
+    "EPIC": 500,
+    "LEGENDARY": 1000
+  },
+  "sections": {
+    "killmessage": [
+      {
+        "id": "slain",
+        "name": "Классика",
+        "rarity": "COMMON",
+        "preview": [
+          {
+            "text": "☠",
+            "color": "#FF5555",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "пал от руки",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "(9.5❤)",
+            "color": "#555555",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "lobby",
+        "name": "В лобби",
+        "rarity": "COMMON",
+        "preview": [
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "отправлен в лобби игроком",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "deleted",
+        "name": "Удалён",
+        "rarity": "RARE",
+        "preview": [
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "удалил",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "из реальности",
+            "color": "#AAAAAA",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "ez",
+        "name": "Изи",
+        "rarity": "COMMON",
+        "preview": [
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "разобрал",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": ". ez",
+            "color": "#AAAAAA",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "tier",
+        "name": "Тир-тест",
+        "rarity": "RARE",
+        "preview": [
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "не прошёл тир-тест у",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "combo",
+        "name": "Комбо",
+        "rarity": "RARE",
+        "preview": [
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "закомбил",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "до смерти",
+            "color": "#AAAAAA",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "respawn",
+        "name": "Респавн",
+        "rarity": "COMMON",
+        "preview": [
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "ушёл на респавн благодаря",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "wasted",
+        "name": "WASTED",
+        "rarity": "EPIC",
+        "preview": [
+          {
+            "text": "WASTED",
+            "color": "#AA0000",
+            "bold": true
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "»",
+            "color": "#555555",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "←",
+            "color": "#555555",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "noscope",
+        "name": "Без прицела",
+        "rarity": "RARE",
+        "preview": [
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "снёс",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "без прицела",
+            "color": "#AAAAAA",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "gg",
+        "name": "GG",
+        "rarity": "COMMON",
+        "preview": [
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "не успел сказать GG, как",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "исчез",
+            "color": "#AAAAAA",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "thunder",
+        "name": "Громовержец",
+        "rarity": "EPIC",
+        "preview": [
+          {
+            "text": "⚡",
+            "color": "#FFFF55",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "поразил громом",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "stars",
+        "name": "Звёзды",
+        "rarity": "RARE",
+        "preview": [
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "теперь видит звёзды — спасибо",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "✦",
+            "color": "#FFFF55",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "bounty",
+        "name": "Охотник",
+        "rarity": "EPIC",
+        "preview": [
+          {
+            "text": "✪",
+            "color": "#FFAA00",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "забрал голову",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "crit",
+        "name": "Крит",
+        "rarity": "COMMON",
+        "preview": [
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "кританул",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "насквозь",
+            "color": "#AAAAAA",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "skill",
+        "name": "Скилл",
+        "rarity": "RARE",
+        "preview": [
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "столкнулся со скиллом",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "history",
+        "name": "История",
+        "rarity": "EPIC",
+        "preview": [
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "вписал",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "в историю..",
+            "color": "#AAAAAA",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "moon",
+        "name": "Судная ночь",
+        "rarity": "EPIC",
+        "preview": [
+          {
+            "text": "☽",
+            "color": "#AA0000",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "не пережил судную ночь благодаря",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "requiem",
+        "name": "Реквием",
+        "rarity": "LEGENDARY",
+        "preview": [
+          {
+            "text": "♪",
+            "color": "#55FFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "сыграл реквием по",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "♪",
+            "color": "#55FFFF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "score",
+        "name": "Счёт",
+        "rarity": "COMMON",
+        "preview": [
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "vs",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "—",
+            "color": "#555555",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "2:1",
+            "color": "#55FF55",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "vanish",
+        "name": "Исчезновение",
+        "rarity": "LEGENDARY",
+        "preview": [
+          {
+            "text": "…",
+            "color": "#555555",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "исчез. Последним его видел",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "catiers",
+        "name": "CATIERS",
+        "rarity": "LEGENDARY",
+        "preview": [
+          {
+            "text": "C",
+            "color": "#983B3B",
+            "bold": true
+          },
+          {
+            "text": "A",
+            "color": "#A44241",
+            "bold": true
+          },
+          {
+            "text": "T",
+            "color": "#B04846",
+            "bold": true
+          },
+          {
+            "text": "I",
+            "color": "#BC4F4C",
+            "bold": true
+          },
+          {
+            "text": "E",
+            "color": "#C85651",
+            "bold": true
+          },
+          {
+            "text": "R",
+            "color": "#D45C57",
+            "bold": true
+          },
+          {
+            "text": "S",
+            "color": "#E0635C",
+            "bold": true
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "»",
+            "color": "#555555",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Cyrexxxx",
+            "color": "#FFFFFF",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "понизил тир",
+            "color": "#AAAAAA",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "bold": false
+          },
+          {
+            "text": "Жертва",
+            "color": "#FFFFFF",
+            "bold": false
+          }
+        ]
+      }
+    ],
+    "killeffect": [
+      {
+        "id": "grave",
+        "name": "Надгробие",
+        "rarity": "COMMON",
+        "description": "Над телом вырастает надгробие и рассыпается пеплом."
+      },
+      {
+        "id": "toxin",
+        "name": "Токсин",
+        "rarity": "COMMON",
+        "description": "Ядовитая лужа пузырится и лопается едкими брызгами."
+      },
+      {
+        "id": "bloodmoon",
+        "name": "Кровавая луна",
+        "rarity": "RARE",
+        "description": "Багровая сфера сжимается, лопается и заливает землю кровью."
+      },
+      {
+        "id": "helix",
+        "name": "Спираль измерений",
+        "rarity": "RARE",
+        "description": "Двойная спираль уносит душу вверх и взрывается салютом."
+      },
+      {
+        "id": "icespike",
+        "name": "Ледяной шип",
+        "rarity": "RARE",
+        "description": "Из инея вырастают ледяные шипы и разлетаются осколками."
+      },
+      {
+        "id": "sakura",
+        "name": "Сакура",
+        "rarity": "RARE",
+        "description": "Лепестки сакуры кружат вихрем, над телом бьётся сердце."
+      },
+      {
+        "id": "pixel",
+        "name": "Пиксельный распад",
+        "rarity": "RARE",
+        "description": "Хитбокс жертвы глючит и рассыпается на пиксели."
+      },
+      {
+        "id": "notes",
+        "name": "Нотный взрыв",
+        "rarity": "RARE",
+        "description": "Радужные ноты разлетаются и берут финальный аккорд."
+      },
+      {
+        "id": "thunder",
+        "name": "Громовой удар",
+        "rarity": "EPIC",
+        "description": "С неба бьёт зигзаг молнии, земля вспыхивает и дымится."
+      },
+      {
+        "id": "souls",
+        "name": "Исход души",
+        "rarity": "EPIC",
+        "description": "Призрак жертвы поднимается из кольца синего пламени."
+      },
+      {
+        "id": "starfall",
+        "name": "Звездопад",
+        "rarity": "EPIC",
+        "description": "С неба падают звёзды и выжигают узор на земле."
+      },
+      {
+        "id": "shockwave",
+        "name": "Ударная волна",
+        "rarity": "EPIC",
+        "description": "Три волны расходятся по земле и выбивают из неё крошку."
+      },
+      {
+        "id": "tornado",
+        "name": "Торнадо",
+        "rarity": "EPIC",
+        "description": "Смерч подхватывает тело, раскручивается и уносится ввысь."
+      },
+      {
+        "id": "raven",
+        "name": "Вороньи крылья",
+        "rarity": "EPIC",
+        "description": "Огромные чёрные крылья делают взмах и осыпаются перьями."
+      },
+      {
+        "id": "electro",
+        "name": "Электросеть",
+        "rarity": "EPIC",
+        "description": "Тело опутывает сеть разрядов и замыкает в одну вспышку."
+      },
+      {
+        "id": "crystal",
+        "name": "Кристаллизация",
+        "rarity": "EPIC",
+        "description": "Тело обрастает кристаллами, которые раскалываются дождём осколков."
+      },
+      {
+        "id": "pentagram",
+        "name": "Адская пентаграмма",
+        "rarity": "LEGENDARY",
+        "description": "Пламя чертит пентаграмму, из центра вырывается столб лавы."
+      },
+      {
+        "id": "rift",
+        "name": "Разлом бездны",
+        "rarity": "LEGENDARY",
+        "description": "Пространство рвётся, разлом поглощает свет и схлопывается."
+      },
+      {
+        "id": "supernova",
+        "name": "Сверхновая",
+        "rarity": "LEGENDARY",
+        "description": "Звезда рождается и умирает двойной вспышкой света."
+      },
+      {
+        "id": "dragonrune",
+        "name": "Драконья руна",
+        "rarity": "LEGENDARY",
+        "description": "Древние руны вращаются, дракон выдыхает столб пламени."
+      }
+    ],
+    "killsound": [
+      {
+        "id": "gong",
+        "name": "Гонг",
+        "rarity": "RARE"
+      },
+      {
+        "id": "thunder",
+        "name": "Раскат грома",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "laser",
+        "name": "Лазер",
+        "rarity": "RARE"
+      },
+      {
+        "id": "gameover",
+        "name": "Game Over",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "crystal",
+        "name": "Хрусталь",
+        "rarity": "RARE"
+      },
+      {
+        "id": "katana",
+        "name": "Катана",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "coin",
+        "name": "Монетка",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "souls",
+        "name": "Хор душ",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "firework",
+        "name": "Салют",
+        "rarity": "RARE"
+      },
+      {
+        "id": "zap",
+        "name": "Разряд",
+        "rarity": "RARE"
+      },
+      {
+        "id": "badumtss",
+        "name": "Ба-дум-тсс",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "bomb",
+        "name": "Бомба",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "portal",
+        "name": "Портал",
+        "rarity": "RARE"
+      },
+      {
+        "id": "icecrack",
+        "name": "Треск льда",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "bell",
+        "name": "Колокол",
+        "rarity": "RARE"
+      },
+      {
+        "id": "scratch",
+        "name": "Скретч",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "growl",
+        "name": "Рык",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "cannon",
+        "name": "Пушка",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "harp",
+        "name": "Арфа",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "fanfare",
+        "name": "Фанфары",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "pop",
+        "name": "Чпок",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "flatline",
+        "name": "Кардиограмма",
+        "rarity": "LEGENDARY"
+      }
+    ],
+    "namecolor": [
+      {
+        "id": "red",
+        "name": "Алый",
+        "rarity": "COMMON",
+        "colors": [
+          "#FF4040"
+        ],
+        "bold": false
+      },
+      {
+        "id": "orange",
+        "name": "Оранжевый",
+        "rarity": "COMMON",
+        "colors": [
+          "#FF9A2E"
+        ],
+        "bold": false
+      },
+      {
+        "id": "yellow",
+        "name": "Солнечный",
+        "rarity": "COMMON",
+        "colors": [
+          "#FFE14D"
+        ],
+        "bold": false
+      },
+      {
+        "id": "lime",
+        "name": "Лаймовый",
+        "rarity": "COMMON",
+        "colors": [
+          "#7CFF4D"
+        ],
+        "bold": false
+      },
+      {
+        "id": "aqua",
+        "name": "Бирюзовый",
+        "rarity": "COMMON",
+        "colors": [
+          "#3DF5E5"
+        ],
+        "bold": false
+      },
+      {
+        "id": "blue",
+        "name": "Небесный",
+        "rarity": "COMMON",
+        "colors": [
+          "#5CA8FF"
+        ],
+        "bold": false
+      },
+      {
+        "id": "purple",
+        "name": "Аметист",
+        "rarity": "COMMON",
+        "colors": [
+          "#B36BFF"
+        ],
+        "bold": false
+      },
+      {
+        "id": "pink",
+        "name": "Розовый",
+        "rarity": "COMMON",
+        "colors": [
+          "#FF7AC8"
+        ],
+        "bold": false
+      },
+      {
+        "id": "catiers",
+        "name": "CATIERS",
+        "rarity": "RARE",
+        "colors": [
+          "#983B3B",
+          "#E0635C"
+        ],
+        "bold": false
+      },
+      {
+        "id": "sunset",
+        "name": "Закат",
+        "rarity": "RARE",
+        "colors": [
+          "#FF512F",
+          "#F09819"
+        ],
+        "bold": false
+      },
+      {
+        "id": "ocean",
+        "name": "Океан",
+        "rarity": "RARE",
+        "colors": [
+          "#2BC0E4",
+          "#6DD5FA"
+        ],
+        "bold": false
+      },
+      {
+        "id": "toxic",
+        "name": "Токсин",
+        "rarity": "RARE",
+        "colors": [
+          "#39FF14",
+          "#0FA958"
+        ],
+        "bold": false
+      },
+      {
+        "id": "sakura",
+        "name": "Сакура",
+        "rarity": "RARE",
+        "colors": [
+          "#FF9A9E",
+          "#FECFEF"
+        ],
+        "bold": false
+      },
+      {
+        "id": "gold",
+        "name": "Золото",
+        "rarity": "EPIC",
+        "colors": [
+          "#F7971E",
+          "#FFD200"
+        ],
+        "bold": false
+      },
+      {
+        "id": "frost",
+        "name": "Иней",
+        "rarity": "EPIC",
+        "colors": [
+          "#E0F7FF",
+          "#7FD3FF",
+          "#3A7BD5"
+        ],
+        "bold": false
+      },
+      {
+        "id": "inferno",
+        "name": "Инферно",
+        "rarity": "EPIC",
+        "colors": [
+          "#FF1E1E",
+          "#FF8C00",
+          "#FFD700"
+        ],
+        "bold": false
+      },
+      {
+        "id": "candy",
+        "name": "Конфета",
+        "rarity": "EPIC",
+        "colors": [
+          "#FF6FD8",
+          "#A06BFF",
+          "#6FD8FF"
+        ],
+        "bold": false
+      },
+      {
+        "id": "aurora",
+        "name": "Аврора",
+        "rarity": "LEGENDARY",
+        "colors": [
+          "#00F5A0",
+          "#00D9F5",
+          "#B36BFF"
+        ],
+        "bold": false
+      },
+      {
+        "id": "void",
+        "name": "Бездна",
+        "rarity": "LEGENDARY",
+        "colors": [
+          "#B36BFF",
+          "#6A00FF"
+        ],
+        "bold": true
+      },
+      {
+        "id": "rainbow",
+        "name": "Радуга",
+        "rarity": "LEGENDARY",
+        "colors": [
+          "#FF5E5E",
+          "#FFE45E",
+          "#5EF0FF"
+        ],
+        "bold": true
+      }
+    ],
+    "hat": [
+      {
+        "id": "farmer",
+        "name": "Соломенная шляпа",
+        "rarity": "RARE"
+      },
+      {
+        "id": "crown",
+        "name": "Корона",
+        "rarity": "RARE"
+      },
+      {
+        "id": "tophat",
+        "name": "Цилиндр",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "wizard",
+        "name": "Колпак волшебника",
+        "rarity": "RARE"
+      },
+      {
+        "id": "cat_ears",
+        "name": "Кошачьи ушки",
+        "rarity": "RARE"
+      },
+      {
+        "id": "halo",
+        "name": "Нимб",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "viking",
+        "name": "Шлем викинга",
+        "rarity": "RARE"
+      },
+      {
+        "id": "cowboy",
+        "name": "Ковбойская шляпа",
+        "rarity": "RARE"
+      },
+      {
+        "id": "santa",
+        "name": "Колпак Санты",
+        "rarity": "RARE"
+      },
+      {
+        "id": "devil",
+        "name": "Рожки",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "witch",
+        "name": "Ведьмина шляпа",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "fire_mage",
+        "name": "Шляпа огненного мага",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "flower",
+        "name": "Цветущая шляпа",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "candles",
+        "name": "Свечная шляпа",
+        "rarity": "RARE"
+      },
+      {
+        "id": "skull",
+        "name": "Шляпа с черепом",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "pumpkin",
+        "name": "Тыква Джека",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "cocoa",
+        "name": "Кружка какао",
+        "rarity": "RARE"
+      },
+      {
+        "id": "pilgrim",
+        "name": "Шляпа пилигрима",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "crystal",
+        "name": "Шляпа хрустального мага",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "cat",
+        "name": "Кот на голове",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "tank",
+        "name": "Танк с котом",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "magnet",
+        "name": "Магнит",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "nightvision",
+        "name": "Очки ночного видения",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "paintbucket",
+        "name": "Ведро краски",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "ufo",
+        "name": "НЛО",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "ranger",
+        "name": "Шляпа рейнджера",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "magician",
+        "name": "Цилиндр фокусника",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "saguaro",
+        "name": "Кактус",
+        "rarity": "RARE"
+      },
+      {
+        "id": "hardhat",
+        "name": "Строительная каска",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "drone",
+        "name": "Дрон",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "lotus",
+        "name": "Лотос",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "tiki",
+        "name": "Маска тики",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "tubeteika",
+        "name": "Тюбетейка",
+        "rarity": "RARE"
+      },
+      {
+        "id": "borik",
+        "name": "Бөрік с үкі",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "kabuto",
+        "name": "Кабуто",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "tricorn",
+        "name": "Треуголка пирата",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "frog",
+        "name": "Лягушка",
+        "rarity": "RARE"
+      },
+      {
+        "id": "amanita",
+        "name": "Мухомор",
+        "rarity": "RARE"
+      },
+      {
+        "id": "headset",
+        "name": "Игровая гарнитура",
+        "rarity": "LEGENDARY"
+      }
+    ],
+    "swordskin": [
+      {
+        "id": "katana",
+        "name": "Катана",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "ruby",
+        "name": "Рубиновый клинок",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "frost",
+        "name": "Ледяной клинок",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "void",
+        "name": "Клинок бездны",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "flame",
+        "name": "Пылающий меч",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "cyber",
+        "name": "Кибер-клинок",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "catiers",
+        "name": "Меч CATiers",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "bone",
+        "name": "Костяной меч",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "royal",
+        "name": "Королевский клинок",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "cleaver",
+        "name": "Тесак",
+        "rarity": "COMMON"
+      },
+      {
+        "id": "irbis",
+        "name": "Ирбис",
+        "rarity": "RARE"
+      },
+      {
+        "id": "tengri",
+        "name": "Тенгри",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "tumar",
+        "name": "Тумар",
+        "rarity": "RARE"
+      },
+      {
+        "id": "samarkand",
+        "name": "Самарканд",
+        "rarity": "RARE"
+      },
+      {
+        "id": "volcano",
+        "name": "Вулкан",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "storm",
+        "name": "Буря",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "abyss",
+        "name": "Бездна",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "emerald",
+        "name": "Изумрудный страж",
+        "rarity": "RARE"
+      },
+      {
+        "id": "bloodmoon",
+        "name": "Кровавая луна",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "steppe",
+        "name": "Степной ветер",
+        "rarity": "RARE"
+      },
+      {
+        "id": "berkut",
+        "name": "Золотой беркут",
+        "rarity": "RARE"
+      },
+      {
+        "id": "aydahar",
+        "name": "Айдахар",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "aurora",
+        "name": "Северное сияние",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "samruk",
+        "name": "Самрук",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "altyn",
+        "name": "Алтын адам",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "zhylan",
+        "name": "Змей",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "amethyst",
+        "name": "Аметист",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "chronos",
+        "name": "Хронос",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "kyzylkum",
+        "name": "Кызылкум",
+        "rarity": "RARE"
+      },
+      {
+        "id": "bori",
+        "name": "Бөрі",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "nz_aether",
+        "name": "Клинок Эфира",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "nz_beecomb",
+        "name": "Медовые соты",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "nz_necromancer",
+        "name": "Меч некроманта",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "nz_ocean",
+        "name": "Клинок океана",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "nz_last_rose",
+        "name": "Последняя роза",
+        "rarity": "EPIC"
+      },
+      {
+        "id": "nz_cursed",
+        "name": "Проклятый меч",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "nz_dark",
+        "name": "Тёмный меч",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "nz_demonic",
+        "name": "Демонический клинок",
+        "rarity": "LEGENDARY"
+      },
+      {
+        "id": "nz_magnetic",
+        "name": "Магнитный клинок",
+        "rarity": "LEGENDARY"
+      }
+    ],
+    "title": [
+      {
+        "id": "palach",
+        "name": "Палач",
+        "rarity": "COMMON",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#9E9E9E",
+            "bold": false
+          },
+          {
+            "text": "П",
+            "color": "#A7A7A7",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#B1B1B1",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#BABABA",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#C3C3C3",
+            "bold": false
+          },
+          {
+            "text": "ч",
+            "color": "#CDCDCD",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#D6D6D6",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "fantom",
+        "name": "Фантом",
+        "rarity": "COMMON",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#9E9E9E",
+            "bold": false
+          },
+          {
+            "text": "Ф",
+            "color": "#A6A6A6",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#AEAEAE",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#B6B6B6",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#BEBEBE",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#C6C6C6",
+            "bold": false
+          },
+          {
+            "text": "м",
+            "color": "#CECECE",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#D6D6D6",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "ten",
+        "name": "Тень",
+        "rarity": "RARE",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#00C6FF",
+            "bold": false
+          },
+          {
+            "text": "Т",
+            "color": "#00B5FF",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#00A4FF",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#0094FF",
+            "bold": false
+          },
+          {
+            "text": "ь",
+            "color": "#0083FF",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#0072FF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "klinok",
+        "name": "Клинок",
+        "rarity": "RARE",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#00C6FF",
+            "bold": false
+          },
+          {
+            "text": "К",
+            "color": "#00BAFF",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#00AEFF",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#00A2FF",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#0096FF",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#008AFF",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#007EFF",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#0072FF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "strannik",
+        "name": "Странник",
+        "rarity": "RARE",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#00C6FF",
+            "bold": false
+          },
+          {
+            "text": "С",
+            "color": "#00BDFF",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#00B3FF",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#00AAFF",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#00A1FF",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#0097FF",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#008EFF",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#0085FF",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#007BFF",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#0072FF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "feniks",
+        "name": "Феникс",
+        "rarity": "EPIC",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#5B2A86",
+            "bold": false
+          },
+          {
+            "text": "Ф",
+            "color": "#622E8C",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#6A3191",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#713597",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#78399C",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#7F3DA2",
+            "bold": false
+          },
+          {
+            "text": "с",
+            "color": "#8740A7",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#8E44AD",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "mirazh",
+        "name": "Мираж",
+        "rarity": "EPIC",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#5B2A86",
+            "bold": false
+          },
+          {
+            "text": "М",
+            "color": "#642E8D",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#6C3393",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#75379A",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#7D3BA0",
+            "bold": false
+          },
+          {
+            "text": "ж",
+            "color": "#8640A7",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#8E44AD",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "titan",
+        "name": "Титан",
+        "rarity": "LEGENDARY",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#FFD700",
+            "bold": false
+          },
+          {
+            "text": "Т",
+            "color": "#FFCF00",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#FFC600",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#FFBE00",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#FFB600",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#FFAD00",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#FFA500",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "bezdna",
+        "name": "Бездна",
+        "rarity": "LEGENDARY",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#FFD700",
+            "bold": false
+          },
+          {
+            "text": "Б",
+            "color": "#FFD000",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#FFC900",
+            "bold": false
+          },
+          {
+            "text": "з",
+            "color": "#FFC200",
+            "bold": false
+          },
+          {
+            "text": "д",
+            "color": "#FFBA00",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#FFB300",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#FFAC00",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#FFA500",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "vechny",
+        "name": "Вечный",
+        "rarity": "LEGENDARY",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#8B0000",
+            "bold": false
+          },
+          {
+            "text": "В",
+            "color": "#930606",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#9C0B0B",
+            "bold": false
+          },
+          {
+            "text": "ч",
+            "color": "#A41111",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#AD1717",
+            "bold": false
+          },
+          {
+            "text": "ы",
+            "color": "#B51D1D",
+            "bold": false
+          },
+          {
+            "text": "й",
+            "color": "#BE2222",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#C62828",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "novichok",
+        "name": "Новичок",
+        "rarity": "COMMON",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#A8FF78",
+            "bold": false
+          },
+          {
+            "text": "Н",
+            "color": "#A2FF84",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#9CFF90",
+            "bold": false
+          },
+          {
+            "text": "в",
+            "color": "#96FF9B",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#90FFA7",
+            "bold": false
+          },
+          {
+            "text": "ч",
+            "color": "#8AFFB3",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#84FFBF",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#7EFFCA",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#78FFD6",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "voin",
+        "name": "Воин",
+        "rarity": "RARE",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#00C6FF",
+            "bold": false
+          },
+          {
+            "text": "В",
+            "color": "#00B5FF",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#00A4FF",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#0094FF",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#0083FF",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#0072FF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "ohotnik",
+        "name": "Охотник",
+        "rarity": "RARE",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#134E5E",
+            "bold": false
+          },
+          {
+            "text": "О",
+            "color": "#1F5B62",
+            "bold": false
+          },
+          {
+            "text": "х",
+            "color": "#2B6767",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#36746B",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#42806F",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#4E8D73",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#5A9978",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#65A67C",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#71B280",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "arhimag",
+        "name": "Архимаг",
+        "rarity": "EPIC",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#6A11CB",
+            "bold": false
+          },
+          {
+            "text": "А",
+            "color": "#611ED1",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#592AD7",
+            "bold": false
+          },
+          {
+            "text": "х",
+            "color": "#5037DD",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#4843E4",
+            "bold": false
+          },
+          {
+            "text": "м",
+            "color": "#3F50EA",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#365CF0",
+            "bold": false
+          },
+          {
+            "text": "г",
+            "color": "#2E69F6",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#2575FC",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "demon",
+        "name": "Демон",
+        "rarity": "LEGENDARY",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#1A0000",
+            "bold": false
+          },
+          {
+            "text": "Д",
+            "color": "#440000",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#6F0000",
+            "bold": false
+          },
+          {
+            "text": "м",
+            "color": "#990000",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#BB1700",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#DD2E00",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#FF4500",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "ronin",
+        "name": "Ронин",
+        "rarity": "EPIC",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#FF416C",
+            "bold": false
+          },
+          {
+            "text": "Р",
+            "color": "#FF4361",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#FF4456",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#FF464C",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#FF4841",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#FF4936",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#FF4B2B",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "otshelnik",
+        "name": "Отшельник",
+        "rarity": "LEGENDARY",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#434343",
+            "bold": false
+          },
+          {
+            "text": "О",
+            "color": "#3C3C3C",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#363636",
+            "bold": false
+          },
+          {
+            "text": "ш",
+            "color": "#2F2F2F",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#282828",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#222222",
+            "bold": false
+          },
+          {
+            "text": "ь",
+            "color": "#1B1B1B",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#141414",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#0D0D0D",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#070707",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#000000",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "magistr",
+        "name": "Магистр",
+        "rarity": "EPIC",
+        "crate": false,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#F54EA2",
+            "bold": false
+          },
+          {
+            "text": "М",
+            "color": "#F6539D",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#F85897",
+            "bold": false
+          },
+          {
+            "text": "г",
+            "color": "#F95D92",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#FA628C",
+            "bold": false
+          },
+          {
+            "text": "с",
+            "color": "#FB6787",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#FD6C81",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#FE717C",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#FF7676",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "kochevnik",
+        "name": "Кочевник",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#C2B280",
+            "bold": false
+          },
+          {
+            "text": "К",
+            "color": "#BCAC7C",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#B6A678",
+            "bold": false
+          },
+          {
+            "text": "ч",
+            "color": "#B0A073",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#AA9A6F",
+            "bold": false
+          },
+          {
+            "text": "в",
+            "color": "#A5936B",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#9F8D67",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#998762",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#93815E",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#8D7B5A",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "vsadnik",
+        "name": "Всадник",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#B08D57",
+            "bold": false
+          },
+          {
+            "text": "В",
+            "color": "#A98753",
+            "bold": false
+          },
+          {
+            "text": "с",
+            "color": "#A38150",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#9C7B4C",
+            "bold": false
+          },
+          {
+            "text": "д",
+            "color": "#957549",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#8E6E45",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#886841",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#81623E",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#7A5C3A",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "luchnik",
+        "name": "Лучник",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#9CCC65",
+            "bold": false
+          },
+          {
+            "text": "Л",
+            "color": "#92C35D",
+            "bold": false
+          },
+          {
+            "text": "у",
+            "color": "#88B956",
+            "bold": false
+          },
+          {
+            "text": "ч",
+            "color": "#7EB04E",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#73A746",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#699E3E",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#5F9437",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#558B2F",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "dozorny",
+        "name": "Дозорный",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#90A4AE",
+            "bold": false
+          },
+          {
+            "text": "Д",
+            "color": "#899EA8",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#8398A2",
+            "bold": false
+          },
+          {
+            "text": "з",
+            "color": "#7C929D",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#758C97",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#6F8691",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#68808B",
+            "bold": false
+          },
+          {
+            "text": "ы",
+            "color": "#617A86",
+            "bold": false
+          },
+          {
+            "text": "й",
+            "color": "#5B7480",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#546E7A",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "sledopyt",
+        "name": "Следопыт",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#A1887F",
+            "bold": false
+          },
+          {
+            "text": "С",
+            "color": "#9B8178",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#957B71",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#90746A",
+            "bold": false
+          },
+          {
+            "text": "д",
+            "color": "#8A6D63",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#84675D",
+            "bold": false
+          },
+          {
+            "text": "п",
+            "color": "#7E6056",
+            "bold": false
+          },
+          {
+            "text": "ы",
+            "color": "#79594F",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#735348",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#6D4C41",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "sokolnik",
+        "name": "Сокольник",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#BCAAA4",
+            "bold": false
+          },
+          {
+            "text": "С",
+            "color": "#B7A49E",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#B39E97",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#AE9891",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#A9928A",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#A58C84",
+            "bold": false
+          },
+          {
+            "text": "ь",
+            "color": "#A0867D",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#9B8077",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#967A70",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#92746A",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#8D6E63",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "dzhigit",
+        "name": "Джигит",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#FFCC80",
+            "bold": false
+          },
+          {
+            "text": "Д",
+            "color": "#FBC47B",
+            "bold": false
+          },
+          {
+            "text": "ж",
+            "color": "#F6BB75",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#F2B370",
+            "bold": false
+          },
+          {
+            "text": "г",
+            "color": "#EDAA6A",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#E9A265",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#E4995F",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#E0915A",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "karavanshik",
+        "name": "Караванщик",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#E6C79C",
+            "bold": false
+          },
+          {
+            "text": "К",
+            "color": "#E2C195",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#DEBB8D",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#D9B586",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#D5AF7F",
+            "bold": false
+          },
+          {
+            "text": "в",
+            "color": "#D1A977",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#CDA470",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#C99E68",
+            "bold": false
+          },
+          {
+            "text": "щ",
+            "color": "#C59861",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#C0925A",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#BC8C52",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#B8864B",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "brodyaga",
+        "name": "Бродяга",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#B0BEC5",
+            "bold": false
+          },
+          {
+            "text": "Б",
+            "color": "#A9B8C0",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#A2B3BB",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#9BADB6",
+            "bold": false
+          },
+          {
+            "text": "д",
+            "color": "#94A7B1",
+            "bold": false
+          },
+          {
+            "text": "я",
+            "color": "#8DA1AB",
+            "bold": false
+          },
+          {
+            "text": "г",
+            "color": "#869CA6",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#7F96A1",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#78909C",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "iskatel",
+        "name": "Искатель",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#C5E1A5",
+            "bold": false
+          },
+          {
+            "text": "И",
+            "color": "#BFDE9B",
+            "bold": false
+          },
+          {
+            "text": "с",
+            "color": "#B8DA91",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#B2D787",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#ABD47D",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#A5D072",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#9ECD68",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#98CA5E",
+            "bold": false
+          },
+          {
+            "text": "ь",
+            "color": "#91C654",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#8BC34A",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "kliker",
+        "name": "Кликер",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#E0E0E0",
+            "bold": false
+          },
+          {
+            "text": "К",
+            "color": "#D7D7D7",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#CDCDCD",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#C4C4C4",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#BABABA",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#B1B1B1",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#A7A7A7",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#9E9E9E",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "lovkach",
+        "name": "Ловкач",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#AED581",
+            "bold": false
+          },
+          {
+            "text": "Л",
+            "color": "#A7D078",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#A0CB6F",
+            "bold": false
+          },
+          {
+            "text": "в",
+            "color": "#99C666",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#91C25D",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#8ABD54",
+            "bold": false
+          },
+          {
+            "text": "ч",
+            "color": "#83B84B",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#7CB342",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "zadira",
+        "name": "Задира",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#FFAB91",
+            "bold": false
+          },
+          {
+            "text": "З",
+            "color": "#FBA38D",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#F89B88",
+            "bold": false
+          },
+          {
+            "text": "д",
+            "color": "#F49384",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#F08B80",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#EC837C",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#E97B77",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#E57373",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "kotyonok",
+        "name": "Котёнок",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#FFE0B2",
+            "bold": false
+          },
+          {
+            "text": "К",
+            "color": "#FFDBA5",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#FFD699",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#FFD18C",
+            "bold": false
+          },
+          {
+            "text": "ё",
+            "color": "#FFCC80",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#FFC673",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#FFC166",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#FFBC5A",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#FFB74D",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "murlyka",
+        "name": "Мурлыка",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#F8BBD0",
+            "bold": false
+          },
+          {
+            "text": "М",
+            "color": "#F8B6CC",
+            "bold": false
+          },
+          {
+            "text": "у",
+            "color": "#F7B0C8",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#F7ABC4",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#F6A5C1",
+            "bold": false
+          },
+          {
+            "text": "ы",
+            "color": "#F6A0BD",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#F59AB9",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#F595B5",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#F48FB1",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "begushiy",
+        "name": "Бегущий",
+        "rarity": "COMMON",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#B2DFDB",
+            "bold": false
+          },
+          {
+            "text": "Б",
+            "color": "#ACDDD8",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#A6DAD5",
+            "bold": false
+          },
+          {
+            "text": "г",
+            "color": "#9FD8D2",
+            "bold": false
+          },
+          {
+            "text": "у",
+            "color": "#99D5D0",
+            "bold": false
+          },
+          {
+            "text": "щ",
+            "color": "#93D3CD",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#8DD0CA",
+            "bold": false
+          },
+          {
+            "text": "й",
+            "color": "#86CEC7",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#80CBC4",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "bars",
+        "name": "Барс",
+        "rarity": "RARE",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#E3F2FD",
+            "bold": false
+          },
+          {
+            "text": "Б",
+            "color": "#D2EAFC",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#C2E2FB",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#B1DAFB",
+            "bold": false
+          },
+          {
+            "text": "с",
+            "color": "#A1D2FA",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#90CAF9",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "berkut",
+        "name": "Беркут",
+        "rarity": "RARE",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#81D4FA",
+            "bold": false
+          },
+          {
+            "text": "Б",
+            "color": "#6FC9F4",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#5DBEEE",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#4BB3E8",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#38A9E3",
+            "bold": false
+          },
+          {
+            "text": "у",
+            "color": "#269EDD",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#1493D7",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#0288D1",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "buran",
+        "name": "Буран",
+        "rarity": "RARE",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#E1F5FE",
+            "bold": false
+          },
+          {
+            "text": "Б",
+            "color": "#C9EDFD",
+            "bold": false
+          },
+          {
+            "text": "у",
+            "color": "#B0E4FC",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#98DCFB",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#80D4F9",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#67CBF8",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#4FC3F7",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "tulpar",
+        "name": "Тулпар",
+        "rarity": "RARE",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#B3E5FC",
+            "bold": false
+          },
+          {
+            "text": "Т",
+            "color": "#9FDEFB",
+            "bold": false
+          },
+          {
+            "text": "у",
+            "color": "#8CD8FA",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#78D1F9",
+            "bold": false
+          },
+          {
+            "text": "п",
+            "color": "#64CAF9",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#50C3F8",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#3DBDF7",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#29B6F6",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "sarbaz",
+        "name": "Сарбаз",
+        "rarity": "RARE",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#4DD0E1",
+            "bold": false
+          },
+          {
+            "text": "С",
+            "color": "#42C5D5",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#37BACA",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#2CAFBE",
+            "bold": false
+          },
+          {
+            "text": "б",
+            "color": "#21A4B2",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#1699A6",
+            "bold": false
+          },
+          {
+            "text": "з",
+            "color": "#0B8E9B",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#00838F",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "mergen",
+        "name": "Мерген",
+        "rarity": "RARE",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#80DEEA",
+            "bold": false
+          },
+          {
+            "text": "М",
+            "color": "#6ED7E4",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#5BD0DE",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#49C9D8",
+            "bold": false
+          },
+          {
+            "text": "г",
+            "color": "#37C1D3",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#25BACD",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#12B3C7",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#00ACC1",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "sablya",
+        "name": "Сабля",
+        "rarity": "RARE",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#CFD8DC",
+            "bold": false
+          },
+          {
+            "text": "С",
+            "color": "#BAD5E1",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#A4D1E5",
+            "bold": false
+          },
+          {
+            "text": "б",
+            "color": "#8FCEEA",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#7ACAEE",
+            "bold": false
+          },
+          {
+            "text": "я",
+            "color": "#64C7F3",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#4FC3F7",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "krit",
+        "name": "Крит",
+        "rarity": "RARE",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#64B5F6",
+            "bold": false
+          },
+          {
+            "text": "К",
+            "color": "#56ACF3",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#48A3EF",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#3A9AEC",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#2C91E8",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#1E88E5",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "kombo",
+        "name": "Комбо",
+        "rarity": "RARE",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#4FC3F7",
+            "bold": false
+          },
+          {
+            "text": "К",
+            "color": "#48C4F2",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#41C4ED",
+            "bold": false
+          },
+          {
+            "text": "м",
+            "color": "#3BC5E9",
+            "bold": false
+          },
+          {
+            "text": "б",
+            "color": "#34C5E4",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#2DC6DF",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#26C6DA",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "pantera",
+        "name": "Пантера",
+        "rarity": "RARE",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#3949AB",
+            "bold": false
+          },
+          {
+            "text": "П",
+            "color": "#3544A5",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#3140A0",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#2D3B9A",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#2A3695",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#26318F",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#222D89",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#1E2884",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#1A237E",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "kogtisty",
+        "name": "Когтистый",
+        "rarity": "RARE",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#80CBC4",
+            "bold": false
+          },
+          {
+            "text": "К",
+            "color": "#77C7C0",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#6EC4BC",
+            "bold": false
+          },
+          {
+            "text": "г",
+            "color": "#65C0B7",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#5CBCB3",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#53B9AF",
+            "bold": false
+          },
+          {
+            "text": "с",
+            "color": "#4AB5AB",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#41B1A7",
+            "bold": false
+          },
+          {
+            "text": "ы",
+            "color": "#38ADA2",
+            "bold": false
+          },
+          {
+            "text": "й",
+            "color": "#2FAA9E",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#26A69A",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "nochnoy_kot",
+        "name": "Ночной Кот",
+        "rarity": "RARE",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#5C6BC0",
+            "bold": false
+          },
+          {
+            "text": "Н",
+            "color": "#5766BC",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#5361B8",
+            "bold": false
+          },
+          {
+            "text": "ч",
+            "color": "#4E5CB4",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#4957B0",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#4452AC",
+            "bold": false
+          },
+          {
+            "text": "й",
+            "color": "#404EA7",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "color": "#3B49A3",
+            "bold": false
+          },
+          {
+            "text": "К",
+            "color": "#36449F",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#313F9B",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#2D3A97",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#283593",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "batyr",
+        "name": "Батыр",
+        "rarity": "EPIC",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#B388FF",
+            "bold": false
+          },
+          {
+            "text": "Б",
+            "color": "#AA7EFF",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#A174FF",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#986BFF",
+            "bold": false
+          },
+          {
+            "text": "ы",
+            "color": "#8E61FF",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#8557FF",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#7C4DFF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "alp",
+        "name": "Алп",
+        "rarity": "EPIC",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#EA80FC",
+            "bold": false
+          },
+          {
+            "text": "А",
+            "color": "#DA60FD",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#CA40FE",
+            "bold": false
+          },
+          {
+            "text": "п",
+            "color": "#BA20FE",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#AA00FF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "bahadur",
+        "name": "Бахадур",
+        "rarity": "EPIC",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#FF8A65",
+            "bold": false
+          },
+          {
+            "text": "Б",
+            "color": "#FA815B",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#F57851",
+            "bold": false
+          },
+          {
+            "text": "х",
+            "color": "#F06F47",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#EC673D",
+            "bold": false
+          },
+          {
+            "text": "д",
+            "color": "#E75E33",
+            "bold": false
+          },
+          {
+            "text": "у",
+            "color": "#E25529",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#DD4C1F",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#D84315",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "nuker",
+        "name": "Нукер",
+        "rarity": "EPIC",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#CE93D8",
+            "bold": false
+          },
+          {
+            "text": "Н",
+            "color": "#C381D0",
+            "bold": false
+          },
+          {
+            "text": "у",
+            "color": "#B96EC9",
+            "bold": false
+          },
+          {
+            "text": "к",
+            "color": "#AE5CC1",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#A349B9",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#9937B2",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#8E24AA",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "shaman",
+        "name": "Шаман",
+        "rarity": "EPIC",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#7E57C2",
+            "bold": false
+          },
+          {
+            "text": "Ш",
+            "color": "#6F64BB",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#6171B5",
+            "bold": false
+          },
+          {
+            "text": "м",
+            "color": "#527FAE",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#438CA7",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#3599A1",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#26A69A",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "tigr_pamira",
+        "name": "Тигр Памира",
+        "rarity": "EPIC",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#FFB74D",
+            "bold": false
+          },
+          {
+            "text": "Т",
+            "color": "#FDAF47",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#FBA640",
+            "bold": false
+          },
+          {
+            "text": "г",
+            "color": "#F99E3A",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#F79533",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "color": "#F58D2D",
+            "bold": false
+          },
+          {
+            "text": "П",
+            "color": "#F38427",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#F07C20",
+            "bold": false
+          },
+          {
+            "text": "м",
+            "color": "#EE731A",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#EC6B13",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#EA620D",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#E85A06",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#E65100",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "kot_voevoda",
+        "name": "Кот-Воевода",
+        "rarity": "EPIC",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#BA68C8",
+            "bold": false
+          },
+          {
+            "text": "К",
+            "color": "#B362C4",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#AD5BC0",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#A655BD",
+            "bold": false
+          },
+          {
+            "text": "-",
+            "color": "#9F4EB9",
+            "bold": false
+          },
+          {
+            "text": "В",
+            "color": "#9948B5",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#9242B1",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#8B3BAD",
+            "bold": false
+          },
+          {
+            "text": "в",
+            "color": "#8535A9",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#7E2EA6",
+            "bold": false
+          },
+          {
+            "text": "д",
+            "color": "#7728A2",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#71219E",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#6A1B9A",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "groza_areny",
+        "name": "Гроза Арены",
+        "rarity": "EPIC",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#FF5252",
+            "bold": false
+          },
+          {
+            "text": "Г",
+            "color": "#F45260",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#E9516F",
+            "bold": false
+          },
+          {
+            "text": "о",
+            "color": "#DE517D",
+            "bold": false
+          },
+          {
+            "text": "з",
+            "color": "#D3508C",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#C8509A",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "color": "#BE50A9",
+            "bold": false
+          },
+          {
+            "text": "А",
+            "color": "#B34FB7",
+            "bold": false
+          },
+          {
+            "text": "р",
+            "color": "#A84FC5",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#9D4ED4",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#924EE2",
+            "bold": false
+          },
+          {
+            "text": "ы",
+            "color": "#874DF1",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#7C4DFF",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "han",
+        "name": "Хан",
+        "rarity": "LEGENDARY",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#FFF176",
+            "bold": false
+          },
+          {
+            "text": "Х",
+            "color": "#FFE259",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#FFD23B",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#FFC31E",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#FFB300",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "kagan",
+        "name": "Каган",
+        "rarity": "LEGENDARY",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#FFE082",
+            "bold": false
+          },
+          {
+            "text": "К",
+            "color": "#FFC557",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#FFAA2B",
+            "bold": false
+          },
+          {
+            "text": "г",
+            "color": "#FF8F00",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#FFA61A",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#FFBE35",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#FFD54F",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "vlastelin_stepi",
+        "name": "Властелин Степи",
+        "rarity": "LEGENDARY",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#FFD54F",
+            "bold": false
+          },
+          {
+            "text": "В",
+            "color": "#FFC845",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#FFBC3B",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#FFAF31",
+            "bold": false
+          },
+          {
+            "text": "с",
+            "color": "#FFA228",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#FF951E",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#FF8914",
+            "bold": false
+          },
+          {
+            "text": "л",
+            "color": "#FF7C0A",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#FF6F00",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#FF7A05",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "color": "#FF860A",
+            "bold": false
+          },
+          {
+            "text": "С",
+            "color": "#FF910F",
+            "bold": false
+          },
+          {
+            "text": "т",
+            "color": "#FF9D14",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#FFA819",
+            "bold": false
+          },
+          {
+            "text": "п",
+            "color": "#FFB31E",
+            "bold": false
+          },
+          {
+            "text": "и",
+            "color": "#FFBF23",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#FFCA28",
+            "bold": false
+          }
+        ]
+      },
+      {
+        "id": "legenda_catiers",
+        "name": "Легенда CATIERS",
+        "rarity": "LEGENDARY",
+        "crate": true,
+        "preview": [
+          {
+            "text": "[",
+            "color": "#983B3B",
+            "bold": false
+          },
+          {
+            "text": "Л",
+            "color": "#A1403F",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#AA4543",
+            "bold": false
+          },
+          {
+            "text": "г",
+            "color": "#B34A47",
+            "bold": false
+          },
+          {
+            "text": "е",
+            "color": "#BC4F4C",
+            "bold": false
+          },
+          {
+            "text": "н",
+            "color": "#C55450",
+            "bold": false
+          },
+          {
+            "text": "д",
+            "color": "#CE5954",
+            "bold": false
+          },
+          {
+            "text": "а",
+            "color": "#D75E58",
+            "bold": false
+          },
+          {
+            "text": " ",
+            "color": "#E0635C",
+            "bold": false
+          },
+          {
+            "text": "C",
+            "color": "#E47251",
+            "bold": false
+          },
+          {
+            "text": "A",
+            "color": "#E88045",
+            "bold": false
+          },
+          {
+            "text": "T",
+            "color": "#EC8F3A",
+            "bold": false
+          },
+          {
+            "text": "I",
+            "color": "#F09D2E",
+            "bold": false
+          },
+          {
+            "text": "E",
+            "color": "#F3AC23",
+            "bold": false
+          },
+          {
+            "text": "R",
+            "color": "#F7BA17",
+            "bold": false
+          },
+          {
+            "text": "S",
+            "color": "#FBC90C",
+            "bold": false
+          },
+          {
+            "text": "]",
+            "color": "#FFD700",
+            "bold": false
+          }
+        ]
+      }
+    ]
+  },
+  "crates": [
+    {
+      "key": "cosmetic",
+      "name": "Кейс косметики",
+      "keyPrice": 75,
+      "rarities": {
+        "COMMON": {
+          "count": 35,
+          "chance": 60.0
+        },
+        "RARE": {
+          "count": 44,
+          "chance": 28.0
+        },
+        "EPIC": {
+          "count": 51,
+          "chance": 10.0
+        },
+        "LEGENDARY": {
+          "count": 31,
+          "chance": 2.0
+        }
+      },
+      "items": [
+        {
+          "type": "killmessage",
+          "id": "requiem",
+          "name": "Реквием",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "killmessage",
+          "id": "vanish",
+          "name": "Исчезновение",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "killmessage",
+          "id": "catiers",
+          "name": "CATIERS",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "killeffect",
+          "id": "pentagram",
+          "name": "Адская пентаграмма",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "killeffect",
+          "id": "rift",
+          "name": "Разлом бездны",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "killeffect",
+          "id": "supernova",
+          "name": "Сверхновая",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "killeffect",
+          "id": "dragonrune",
+          "name": "Драконья руна",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "killsound",
+          "id": "growl",
+          "name": "Рык",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "killsound",
+          "id": "fanfare",
+          "name": "Фанфары",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "killsound",
+          "id": "flatline",
+          "name": "Кардиограмма",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "namecolor",
+          "id": "aurora",
+          "name": "Аврора",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "namecolor",
+          "id": "void",
+          "name": "Бездна",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "namecolor",
+          "id": "rainbow",
+          "name": "Радуга",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "hat",
+          "id": "halo",
+          "name": "Нимб",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "hat",
+          "id": "cat",
+          "name": "Кот на голове",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "hat",
+          "id": "tank",
+          "name": "Танк с котом",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "hat",
+          "id": "ufo",
+          "name": "НЛО",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "hat",
+          "id": "magician",
+          "name": "Цилиндр фокусника",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "hat",
+          "id": "drone",
+          "name": "Дрон",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "hat",
+          "id": "tiki",
+          "name": "Маска тики",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "hat",
+          "id": "kabuto",
+          "name": "Кабуто",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "hat",
+          "id": "headset",
+          "name": "Игровая гарнитура",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "swordskin",
+          "id": "tengri",
+          "name": "Тенгри",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "swordskin",
+          "id": "nz_aether",
+          "name": "Клинок Эфира",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "swordskin",
+          "id": "nz_beecomb",
+          "name": "Медовые соты",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "swordskin",
+          "id": "nz_necromancer",
+          "name": "Меч некроманта",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "swordskin",
+          "id": "nz_ocean",
+          "name": "Клинок океана",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "swordskin",
+          "id": "nz_cursed",
+          "name": "Проклятый меч",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "swordskin",
+          "id": "nz_dark",
+          "name": "Тёмный меч",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "swordskin",
+          "id": "nz_demonic",
+          "name": "Демонический клинок",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "swordskin",
+          "id": "nz_magnetic",
+          "name": "Магнитный клинок",
+          "rarity": "LEGENDARY",
+          "chance": 0.0645
+        },
+        {
+          "type": "killmessage",
+          "id": "wasted",
+          "name": "WASTED",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killmessage",
+          "id": "thunder",
+          "name": "Громовержец",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killmessage",
+          "id": "bounty",
+          "name": "Охотник",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killmessage",
+          "id": "history",
+          "name": "История",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killmessage",
+          "id": "moon",
+          "name": "Судная ночь",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killeffect",
+          "id": "thunder",
+          "name": "Громовой удар",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killeffect",
+          "id": "souls",
+          "name": "Исход души",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killeffect",
+          "id": "starfall",
+          "name": "Звездопад",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killeffect",
+          "id": "shockwave",
+          "name": "Ударная волна",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killeffect",
+          "id": "tornado",
+          "name": "Торнадо",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killeffect",
+          "id": "raven",
+          "name": "Вороньи крылья",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killeffect",
+          "id": "electro",
+          "name": "Электросеть",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killeffect",
+          "id": "crystal",
+          "name": "Кристаллизация",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killsound",
+          "id": "thunder",
+          "name": "Раскат грома",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killsound",
+          "id": "katana",
+          "name": "Катана",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killsound",
+          "id": "souls",
+          "name": "Хор душ",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killsound",
+          "id": "bomb",
+          "name": "Бомба",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killsound",
+          "id": "scratch",
+          "name": "Скретч",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killsound",
+          "id": "cannon",
+          "name": "Пушка",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "namecolor",
+          "id": "gold",
+          "name": "Золото",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "namecolor",
+          "id": "frost",
+          "name": "Иней",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "namecolor",
+          "id": "inferno",
+          "name": "Инферно",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "namecolor",
+          "id": "candy",
+          "name": "Конфета",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "devil",
+          "name": "Рожки",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "witch",
+          "name": "Ведьмина шляпа",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "fire_mage",
+          "name": "Шляпа огненного мага",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "skull",
+          "name": "Шляпа с черепом",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "pumpkin",
+          "name": "Тыква Джека",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "crystal",
+          "name": "Шляпа хрустального мага",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "magnet",
+          "name": "Магнит",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "nightvision",
+          "name": "Очки ночного видения",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "paintbucket",
+          "name": "Ведро краски",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "ranger",
+          "name": "Шляпа рейнджера",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "hardhat",
+          "name": "Строительная каска",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "lotus",
+          "name": "Лотос",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "borik",
+          "name": "Бөрік с үкі",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "hat",
+          "id": "tricorn",
+          "name": "Треуголка пирата",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "catiers",
+          "name": "Меч CATiers",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "volcano",
+          "name": "Вулкан",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "storm",
+          "name": "Буря",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "abyss",
+          "name": "Бездна",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "bloodmoon",
+          "name": "Кровавая луна",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "aydahar",
+          "name": "Айдахар",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "aurora",
+          "name": "Северное сияние",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "samruk",
+          "name": "Самрук",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "altyn",
+          "name": "Алтын адам",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "zhylan",
+          "name": "Змей",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "amethyst",
+          "name": "Аметист",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "chronos",
+          "name": "Хронос",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "bori",
+          "name": "Бөрі",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "swordskin",
+          "id": "nz_last_rose",
+          "name": "Последняя роза",
+          "rarity": "EPIC",
+          "chance": 0.1961
+        },
+        {
+          "type": "killmessage",
+          "id": "deleted",
+          "name": "Удалён",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killmessage",
+          "id": "tier",
+          "name": "Тир-тест",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killmessage",
+          "id": "combo",
+          "name": "Комбо",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killmessage",
+          "id": "noscope",
+          "name": "Без прицела",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killmessage",
+          "id": "stars",
+          "name": "Звёзды",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killmessage",
+          "id": "skill",
+          "name": "Скилл",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killeffect",
+          "id": "bloodmoon",
+          "name": "Кровавая луна",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killeffect",
+          "id": "helix",
+          "name": "Спираль измерений",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killeffect",
+          "id": "icespike",
+          "name": "Ледяной шип",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killeffect",
+          "id": "sakura",
+          "name": "Сакура",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killeffect",
+          "id": "pixel",
+          "name": "Пиксельный распад",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killeffect",
+          "id": "notes",
+          "name": "Нотный взрыв",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killsound",
+          "id": "gong",
+          "name": "Гонг",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killsound",
+          "id": "laser",
+          "name": "Лазер",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killsound",
+          "id": "crystal",
+          "name": "Хрусталь",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killsound",
+          "id": "firework",
+          "name": "Салют",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killsound",
+          "id": "zap",
+          "name": "Разряд",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killsound",
+          "id": "portal",
+          "name": "Портал",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killsound",
+          "id": "bell",
+          "name": "Колокол",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "namecolor",
+          "id": "catiers",
+          "name": "CATIERS",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "namecolor",
+          "id": "sunset",
+          "name": "Закат",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "namecolor",
+          "id": "ocean",
+          "name": "Океан",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "namecolor",
+          "id": "toxic",
+          "name": "Токсин",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "namecolor",
+          "id": "sakura",
+          "name": "Сакура",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "farmer",
+          "name": "Соломенная шляпа",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "crown",
+          "name": "Корона",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "wizard",
+          "name": "Колпак волшебника",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "cat_ears",
+          "name": "Кошачьи ушки",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "viking",
+          "name": "Шлем викинга",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "cowboy",
+          "name": "Ковбойская шляпа",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "santa",
+          "name": "Колпак Санты",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "candles",
+          "name": "Свечная шляпа",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "cocoa",
+          "name": "Кружка какао",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "saguaro",
+          "name": "Кактус",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "tubeteika",
+          "name": "Тюбетейка",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "frog",
+          "name": "Лягушка",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "hat",
+          "id": "amanita",
+          "name": "Мухомор",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "swordskin",
+          "id": "irbis",
+          "name": "Ирбис",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "swordskin",
+          "id": "tumar",
+          "name": "Тумар",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "swordskin",
+          "id": "samarkand",
+          "name": "Самарканд",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "swordskin",
+          "id": "emerald",
+          "name": "Изумрудный страж",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "swordskin",
+          "id": "steppe",
+          "name": "Степной ветер",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "swordskin",
+          "id": "berkut",
+          "name": "Золотой беркут",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "swordskin",
+          "id": "kyzylkum",
+          "name": "Кызылкум",
+          "rarity": "RARE",
+          "chance": 0.6364
+        },
+        {
+          "type": "killmessage",
+          "id": "slain",
+          "name": "Классика",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killmessage",
+          "id": "lobby",
+          "name": "В лобби",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killmessage",
+          "id": "ez",
+          "name": "Изи",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killmessage",
+          "id": "respawn",
+          "name": "Респавн",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killmessage",
+          "id": "gg",
+          "name": "GG",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killmessage",
+          "id": "crit",
+          "name": "Крит",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killmessage",
+          "id": "score",
+          "name": "Счёт",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killeffect",
+          "id": "grave",
+          "name": "Надгробие",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killeffect",
+          "id": "toxin",
+          "name": "Токсин",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killsound",
+          "id": "gameover",
+          "name": "Game Over",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killsound",
+          "id": "coin",
+          "name": "Монетка",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killsound",
+          "id": "badumtss",
+          "name": "Ба-дум-тсс",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killsound",
+          "id": "icecrack",
+          "name": "Треск льда",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killsound",
+          "id": "harp",
+          "name": "Арфа",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "killsound",
+          "id": "pop",
+          "name": "Чпок",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "namecolor",
+          "id": "red",
+          "name": "Алый",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "namecolor",
+          "id": "orange",
+          "name": "Оранжевый",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "namecolor",
+          "id": "yellow",
+          "name": "Солнечный",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "namecolor",
+          "id": "lime",
+          "name": "Лаймовый",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "namecolor",
+          "id": "aqua",
+          "name": "Бирюзовый",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "namecolor",
+          "id": "blue",
+          "name": "Небесный",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "namecolor",
+          "id": "purple",
+          "name": "Аметист",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "namecolor",
+          "id": "pink",
+          "name": "Розовый",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "hat",
+          "id": "tophat",
+          "name": "Цилиндр",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "hat",
+          "id": "flower",
+          "name": "Цветущая шляпа",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "hat",
+          "id": "pilgrim",
+          "name": "Шляпа пилигрима",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "swordskin",
+          "id": "katana",
+          "name": "Катана",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "swordskin",
+          "id": "ruby",
+          "name": "Рубиновый клинок",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "swordskin",
+          "id": "frost",
+          "name": "Ледяной клинок",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "swordskin",
+          "id": "void",
+          "name": "Клинок бездны",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "swordskin",
+          "id": "flame",
+          "name": "Пылающий меч",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "swordskin",
+          "id": "cyber",
+          "name": "Кибер-клинок",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "swordskin",
+          "id": "bone",
+          "name": "Костяной меч",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "swordskin",
+          "id": "royal",
+          "name": "Королевский клинок",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        },
+        {
+          "type": "swordskin",
+          "id": "cleaver",
+          "name": "Тесак",
+          "rarity": "COMMON",
+          "chance": 1.7143
+        }
+      ]
+    },
+    {
+      "key": "title",
+      "name": "Кейс титулов",
+      "keyPrice": 75,
+      "rarities": {
+        "COMMON": {
+          "count": 16,
+          "chance": 60.0
+        },
+        "RARE": {
+          "count": 12,
+          "chance": 28.0
+        },
+        "EPIC": {
+          "count": 8,
+          "chance": 10.0
+        },
+        "LEGENDARY": {
+          "count": 4,
+          "chance": 2.0
+        }
+      },
+      "items": [
+        {
+          "type": "title",
+          "id": "han",
+          "name": "Хан",
+          "rarity": "LEGENDARY",
+          "chance": 0.5
+        },
+        {
+          "type": "title",
+          "id": "kagan",
+          "name": "Каган",
+          "rarity": "LEGENDARY",
+          "chance": 0.5
+        },
+        {
+          "type": "title",
+          "id": "vlastelin_stepi",
+          "name": "Властелин Степи",
+          "rarity": "LEGENDARY",
+          "chance": 0.5
+        },
+        {
+          "type": "title",
+          "id": "legenda_catiers",
+          "name": "Легенда CATIERS",
+          "rarity": "LEGENDARY",
+          "chance": 0.5
+        },
+        {
+          "type": "title",
+          "id": "batyr",
+          "name": "Батыр",
+          "rarity": "EPIC",
+          "chance": 1.25
+        },
+        {
+          "type": "title",
+          "id": "alp",
+          "name": "Алп",
+          "rarity": "EPIC",
+          "chance": 1.25
+        },
+        {
+          "type": "title",
+          "id": "bahadur",
+          "name": "Бахадур",
+          "rarity": "EPIC",
+          "chance": 1.25
+        },
+        {
+          "type": "title",
+          "id": "nuker",
+          "name": "Нукер",
+          "rarity": "EPIC",
+          "chance": 1.25
+        },
+        {
+          "type": "title",
+          "id": "shaman",
+          "name": "Шаман",
+          "rarity": "EPIC",
+          "chance": 1.25
+        },
+        {
+          "type": "title",
+          "id": "tigr_pamira",
+          "name": "Тигр Памира",
+          "rarity": "EPIC",
+          "chance": 1.25
+        },
+        {
+          "type": "title",
+          "id": "kot_voevoda",
+          "name": "Кот-Воевода",
+          "rarity": "EPIC",
+          "chance": 1.25
+        },
+        {
+          "type": "title",
+          "id": "groza_areny",
+          "name": "Гроза Арены",
+          "rarity": "EPIC",
+          "chance": 1.25
+        },
+        {
+          "type": "title",
+          "id": "bars",
+          "name": "Барс",
+          "rarity": "RARE",
+          "chance": 2.3333
+        },
+        {
+          "type": "title",
+          "id": "berkut",
+          "name": "Беркут",
+          "rarity": "RARE",
+          "chance": 2.3333
+        },
+        {
+          "type": "title",
+          "id": "buran",
+          "name": "Буран",
+          "rarity": "RARE",
+          "chance": 2.3333
+        },
+        {
+          "type": "title",
+          "id": "tulpar",
+          "name": "Тулпар",
+          "rarity": "RARE",
+          "chance": 2.3333
+        },
+        {
+          "type": "title",
+          "id": "sarbaz",
+          "name": "Сарбаз",
+          "rarity": "RARE",
+          "chance": 2.3333
+        },
+        {
+          "type": "title",
+          "id": "mergen",
+          "name": "Мерген",
+          "rarity": "RARE",
+          "chance": 2.3333
+        },
+        {
+          "type": "title",
+          "id": "sablya",
+          "name": "Сабля",
+          "rarity": "RARE",
+          "chance": 2.3333
+        },
+        {
+          "type": "title",
+          "id": "krit",
+          "name": "Крит",
+          "rarity": "RARE",
+          "chance": 2.3333
+        },
+        {
+          "type": "title",
+          "id": "kombo",
+          "name": "Комбо",
+          "rarity": "RARE",
+          "chance": 2.3333
+        },
+        {
+          "type": "title",
+          "id": "pantera",
+          "name": "Пантера",
+          "rarity": "RARE",
+          "chance": 2.3333
+        },
+        {
+          "type": "title",
+          "id": "kogtisty",
+          "name": "Когтистый",
+          "rarity": "RARE",
+          "chance": 2.3333
+        },
+        {
+          "type": "title",
+          "id": "nochnoy_kot",
+          "name": "Ночной Кот",
+          "rarity": "RARE",
+          "chance": 2.3333
+        },
+        {
+          "type": "title",
+          "id": "kochevnik",
+          "name": "Кочевник",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "vsadnik",
+          "name": "Всадник",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "luchnik",
+          "name": "Лучник",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "dozorny",
+          "name": "Дозорный",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "sledopyt",
+          "name": "Следопыт",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "sokolnik",
+          "name": "Сокольник",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "dzhigit",
+          "name": "Джигит",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "karavanshik",
+          "name": "Караванщик",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "brodyaga",
+          "name": "Бродяга",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "iskatel",
+          "name": "Искатель",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "kliker",
+          "name": "Кликер",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "lovkach",
+          "name": "Ловкач",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "zadira",
+          "name": "Задира",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "kotyonok",
+          "name": "Котёнок",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "murlyka",
+          "name": "Мурлыка",
+          "rarity": "COMMON",
+          "chance": 3.75
+        },
+        {
+          "type": "title",
+          "id": "begushiy",
+          "name": "Бегущий",
+          "rarity": "COMMON",
+          "chance": 3.75
+        }
+      ]
+    }
+  ]
+}

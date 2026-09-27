@@ -1,70 +1,56 @@
 import { describe, expect, it } from 'vitest'
-import { storeTypeOf, validateCheckout, visibleStoreProducts } from './catalog'
-import type { EasyDonateProduct } from './easydonate'
+import { CATALOG, deliveryCommands, publicProducts, validateCheckout } from './catalog'
 
-function product(overrides: Partial<EasyDonateProduct> = {}): EasyDonateProduct {
-  return {
-    id: 1,
-    name: 'Роль Wise',
-    price: 245,
-    old_price: null,
-    type: 'group',
-    number: 1,
-    is_hidden: 0,
-    commands: ['lp user {user} parent addtemp wise 30d accumulate'],
-    description: 'Роль',
-    image: null,
-    sort_index: 1,
-    ...overrides,
-  }
-}
-
-describe('storeTypeOf', () => {
-  it('maps EasyDonate groups to the roles section', () => {
-    expect(storeTypeOf(product())).toBe('rank')
+describe('catalog', () => {
+  it('has the owner prices in tenge and CAT < Wise < Premium order', () => {
+    const price = (slug: string) => CATALOG.find((p) => p.slug === slug)!.price
+    expect([price('role-cat'), price('role-wise'), price('role-premium')]).toEqual([1599, 2599, 3799])
+    expect(publicProducts('rank').map((p) => p.slug)).toEqual(['role-cat', 'role-wise', 'role-premium'])
+    expect(publicProducts('currency').map((p) => [p.amount, p.price])).toEqual([[100, 500], [250, 1250], [500, 2500], [1100, 5000]])
   })
 
-  it('detects crate keys by the givekey command, not by EasyDonate type', () => {
-    expect(storeTypeOf(product({ type: 'other', commands: ['givekey {user} title 1'] }))).toBe('crate_key')
+  it('never exposes delivery commands', () => {
+    for (const p of publicProducts()) expect(p).not.toHaveProperty('deliver')
   })
 
-  it('falls back to other for unknown products', () => {
-    expect(storeTypeOf(product({ type: 'item', commands: ['give {user} diamond 1'] }))).toBe('other')
-  })
-})
-
-describe('visibleStoreProducts', () => {
-  it('drops hidden products, hides commands and filters by type', () => {
-    const list = [product({ id: 1 }), product({ id: 2, is_hidden: 1 }), product({ id: 3, type: 'other', commands: ['givekey {user} title 1'] })]
-    const all = visibleStoreProducts(list)
-    expect(all.map((p) => p.slug)).toEqual(['1', '3'])
-    expect(all[0]).not.toHaveProperty('commands')
-    expect(visibleStoreProducts(list, 'crate_key').map((p) => p.slug)).toEqual(['3'])
+  it('only uses commands the WiseDelivery allowlist permits', () => {
+    for (const p of CATALOG) {
+      for (const t of p.deliver) expect(t).toMatch(/^(lp user \{nick\} parent addtemp [a-z]+ 30d accumulate|claws deliver \{nick\} \d+ wise-\{delivery\}$|tellraw \{nick\} )/)
+    }
   })
 })
 
 describe('validateCheckout', () => {
-  const catalog = [product({ id: 10 }), product({ id: 11, is_hidden: 1 })]
-
-  it('accepts a valid cart and merges duplicate lines', () => {
-    const result = validateCheckout(' Notch ', [{ slug: '10', qty: 1 }, { slug: '10', qty: 2 }], catalog)
-    expect(result).toEqual({ ok: true, nick: 'Notch', products: { '10': 3 } })
+  it('prices the cart from the catalog and merges duplicate lines', () => {
+    const r = validateCheckout(' Notch ', [{ slug: 'claws-100', qty: 1 }, { slug: 'claws-100', qty: 2 }])
+    expect(r).toEqual({ ok: true, nick: 'Notch', lines: [{ slug: 'claws-100', qty: 3, name: '100 Когтей', price: 500, deliver: ['claws deliver {nick} 100 wise-{delivery}'] }], total: 1500 })
   })
 
   it.each(['ab', 'имя', 'bad nick', 'a'.repeat(17), 42])('rejects invalid nick %s', (nick) => {
-    expect(validateCheckout(nick, [{ slug: '10', qty: 1 }], catalog).ok).toBe(false)
+    expect(validateCheckout(nick, [{ slug: 'claws-100', qty: 1 }]).ok).toBe(false)
   })
 
-  it('rejects an empty cart', () => {
-    expect(validateCheckout('Notch', [], catalog).ok).toBe(false)
+  it('rejects an empty cart and unknown products', () => {
+    expect(validateCheckout('Notch', []).ok).toBe(false)
+    expect(validateCheckout('Notch', [{ slug: '1120632', qty: 1 }]).ok).toBe(false)
   })
 
-  it('rejects hidden or unknown products', () => {
-    expect(validateCheckout('Notch', [{ slug: '11', qty: 1 }], catalog).ok).toBe(false)
-    expect(validateCheckout('Notch', [{ slug: '999', qty: 1 }], catalog).ok).toBe(false)
+  it.each([0, -1, 1.5, 21, '1'])('rejects quantity %s', (qty) => {
+    expect(validateCheckout('Notch', [{ slug: 'claws-100', qty }]).ok).toBe(false)
+  })
+})
+
+describe('deliveryCommands', () => {
+  it('gives every unit its own line (each gets its own delivery UUID → own ref)', () => {
+    const cmds = deliveryCommands([{ slug: 'claws-100', qty: 2, deliver: ['claws deliver {nick} 100 wise-{delivery}'] }])
+    expect(cmds).toEqual([
+      { lineNo: 1, template: 'claws deliver {nick} 100 wise-{delivery}' },
+      { lineNo: 2, template: 'claws deliver {nick} 100 wise-{delivery}' },
+    ])
   })
 
-  it.each([0, -1, 1.5, 100, '1'])('rejects quantity %s', (qty) => {
-    expect(validateCheckout('Notch', [{ slug: '10', qty }], catalog).ok).toBe(false)
+  it('uses the templates saved with the order, not the current catalog', () => {
+    expect(deliveryCommands([{ slug: 'removed-product', qty: 1, deliver: ['tellraw {nick} {}'] }])).toEqual([{ lineNo: 1, template: 'tellraw {nick} {}' }])
+    expect(() => deliveryCommands([{ slug: 'removed-product', qty: 1, deliver: [] }])).toThrow()
   })
 })

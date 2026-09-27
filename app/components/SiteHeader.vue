@@ -1,12 +1,15 @@
 <script setup lang="ts">
-// Шапка сайта — общая для всех страниц. "Магазин" подсвечен везде, кроме /crates.
-// Входа по нику нет: покупка оформляется на ник, введённый в корзине, а оплата и история
-// платежей — на стороне EasyDonate.
+// Шапка сайта — общая для всех страниц; у каждого раздела свой цвет подчёркивания.
+// Входа по нику нет: покупка оформляется на ник, введённый в корзине, оплата — на стороне Robokassa.
 import { useCart } from '~/composables/useCart'
 
 const route = useRoute()
-const isCratesPage = computed(() => route.path === '/crates')
-
+const links = [
+  { to: '/roles', title: 'Роли', tone: 'roles' },
+  { to: '/currency', title: 'Когти', tone: 'claws' },
+  { to: '/crates', title: 'Кейсы', tone: 'crates' },
+  { to: '/cosmetics', title: 'Косметика', tone: 'cosmetics' },
+]
 const { count, open } = useCart()
 </script>
 
@@ -15,8 +18,7 @@ const { count, open } = useCart()
     <div class="top-in">
       <NuxtLink class="brand" to="/"><span class="cube" />WISE</NuxtLink>
       <nav class="main">
-        <NuxtLink to="/" :class="{ on: !isCratesPage }">Магазин</NuxtLink>
-        <NuxtLink to="/crates" :class="{ on: isCratesPage }">Кейсы</NuxtLink>
+        <NuxtLink v-for="l in links" :key="l.to" :to="l.to" :class="[`tone-${l.tone}`, { on: route.path === l.to }]">{{ l.title }}</NuxtLink>
         <a href="https://catiers.xyz" target="_blank" rel="noopener">Тирлист</a>
       </nav>
       <div class="top-right">

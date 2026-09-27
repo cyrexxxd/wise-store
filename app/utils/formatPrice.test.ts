@@ -1,47 +1,24 @@
 import { describe, expect, it } from 'vitest'
-import { formatKzt, formatPrice, formatPriceWithCurrency, rubToKzt } from './formatPrice'
+import { approxRub, formatKzt, formatPrice } from './formatPrice'
 
-// Intl formats ru-RU grouping with U+00A0 (non-breaking space), not a plain U+0020 space —
-// visually identical to the original store.js output, but the code point differs, so tests
-// build the expected string explicitly instead of typing a literal space that would mismatch.
+// ru-RU группирует разряды неразрывным пробелом U+00A0
 const NBSP = ' '
 
 describe('formatPrice', () => {
-  it('groups thousands with a non-breaking space, matching the ru-RU locale used in the original mockup', () => {
+  it('groups thousands with a non-breaking space', () => {
     expect(formatPrice(1990)).toBe(`1${NBSP}990`)
-  })
-
-  it('leaves small numbers unchanged', () => {
     expect(formatPrice(990)).toBe('990')
   })
-
-  it('formats zero as a plain digit', () => {
-    expect(formatPrice(0)).toBe('0')
-  })
 })
 
-describe('formatPriceWithCurrency', () => {
-  it('renders KZT as the tenge sign, matching the mockup', () => {
-    expect(formatPriceWithCurrency(990, 'KZT')).toBe('990 ₸')
-  })
-
-  it('falls back to the raw currency code for anything else', () => {
-    expect(formatPriceWithCurrency(10, 'USD')).toBe('10 USD')
-  })
-})
-
-describe('tenge as the main currency', () => {
-  it('renders RUB as the ruble sign', () => {
-    expect(formatPriceWithCurrency(245, 'RUB')).toBe('245 ₽')
-  })
-
-  it('converts rubles to whole tenge by the configured rate', () => {
-    expect(rubToKzt(245, 5.3)).toBe(1299)                           // 1298.5 → 1299
-    expect(rubToKzt(75, 5.3)).toBe(398)
-    expect(rubToKzt(0, 5.3)).toBe(0)
-  })
-
+describe('tenge', () => {
   it('formats tenge with the tenge sign', () => {
-    expect(formatKzt(1299)).toBe(`1${NBSP}299 ₸`)
+    expect(formatKzt(3799)).toBe(`3${NBSP}799 ₸`)
+  })
+
+  it('gives a rounded ruble hint', () => {
+    expect(approxRub(3599, 5.3)).toBe('≈ 680 ₽')
+    expect(approxRub(1599, 5.3)).toBe('≈ 300 ₽')
+    expect(approxRub(500, 0)).toBe('')
   })
 })

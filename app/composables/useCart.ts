@@ -13,7 +13,8 @@ export interface CartItem {
   qty: number
 }
 
-export const CART_STORAGE_KEY = 'wise.cart.v1'
+// v2: цены в тенге и свои slug товаров (v1 — рубли и id EasyDonate, такие корзины не восстанавливаем)
+export const CART_STORAGE_KEY = 'wise.cart.v2'
 export const NICK_STORAGE_KEY = 'wise.nick.v1'
 
 function isCartItem(value: unknown): value is CartItem {

@@ -3,6 +3,7 @@
    (T-13/T-14) — весь визуальный язык витрины живёт в store.css один в один с исходником;
    Tailwind ниже даёт только preflight и утилиты сверху. */
 @import './store.css';
+@import './theme.css';
 
 @tailwind base;
 @tailwind components;
