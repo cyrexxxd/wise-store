@@ -42,6 +42,8 @@ const roleOf = (slug: string) => slug.replace('role-', '') as RoleKey
         </article>
       </div>
 
+      <PurchaseSteps />
+
       <div class="perks">
         <div class="perks-head">
           <span />

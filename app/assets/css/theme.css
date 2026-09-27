@@ -241,3 +241,21 @@
   .cos-desc { margin: 8px 0 0; font-size: .8rem; color: var(--ink-2); }
   .ways { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
   .ways li { font-size: .7rem; color: var(--ink-2); background: var(--surface-2); border-radius: 999px; padding: 2px 8px; }
+
+  /* ---- как проходит покупка, контакты ---- */
+  .steps { list-style: none; padding: 0; margin: 22px 0 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  @media (max-width: 860px) { .steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 460px) { .steps { grid-template-columns: 1fr; } }
+  .steps li { padding: 14px 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+  .steps b { display: block; font-family: var(--f-display); color: #FFD84A; margin-bottom: 4px; }
+  .steps span { font-size: .84rem; color: var(--ink-2); }
+  .steps a { color: var(--accent-hi); }
+  .steps-sec { padding-top: 0; }
+  .contact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .contact { display: block; padding: 18px 20px; border-radius: 16px; text-decoration: none; color: var(--ink);
+    background: radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--t) 20%, transparent), transparent 70%), var(--surface);
+    border: 1px solid color-mix(in srgb, var(--t) 35%, var(--line)); }
+  .contact b { display: block; font-family: var(--f-display); color: var(--t); }
+  .contact span { font-size: .95rem; word-break: break-all; }
+  .contact-note { margin-top: 16px; color: var(--muted); font-size: .88rem; }
+  .contact-note a { color: var(--accent-hi); }

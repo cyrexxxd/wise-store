@@ -5,7 +5,7 @@ defineProps<{ title: string; updated: string }>()
 </script>
 
 <template>
-  <section class="legal">
+  <section class="legal-page">
     <BackLink />
     <div class="sec-head">
       <h1>{{ title }}</h1>
@@ -70,5 +70,14 @@ defineProps<{ title: string; updated: string }>()
 .legal-doc :deep(dd) {
   margin: 0;
   color: var(--ink);
+}
+.legal-doc :deep(ol) {
+  padding-left: 1.3em;
+  color: var(--ink-2);
+}
+.legal-doc :deep(ol li) {
+  margin: 6px 0;
+  font-size: 0.94rem;
+  line-height: 1.7;
 }
 </style>

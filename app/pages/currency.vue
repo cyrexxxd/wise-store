@@ -43,6 +43,8 @@ const uses = [
       </div>
     </section>
 
+    <section class="steps-sec"><PurchaseSteps /></section>
+
     <section>
       <div class="sec-head"><h2>На что тратить Когти</h2><p>Всё покупается в игре через <code>/cos</code>.</p></div>
       <div class="uses">

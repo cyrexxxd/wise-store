@@ -1,6 +1,7 @@
 <script setup lang="ts">
-// Подвал — общий для всех страниц. Документы (T-25, фаза 4 плана) теперь реальные страницы;
-// данные ИП внутри них — заглушка до заполнения владельцем (см. /requisites).
+// Подвал — общий для всех страниц: документы, контакты и реквизиты продавца (app/data/seller.ts) —
+// Robokassa проверяет их наличие на сайте при активации магазина.
+import { PENDING, SELLER, sellerTitle } from '~/data/seller'
 </script>
 
 <template>
@@ -10,8 +11,8 @@
         <div>
           <h4>О магазине</h4>
           <p>
-            Официальный магазин сервера wise. Покупка привязывается к нику в момент оплаты.
-            Если выдача не пришла за 10 минут — напишите в поддержку.
+            Официальный магазин {{ SELLER.brand }}. Оплата в тенге через Robokassa, выдача на ник автоматически.
+            Email: {{ SELLER.email ?? PENDING }} · тел.: {{ SELLER.phone ?? PENDING }} · поддержка {{ SELLER.supportHours }}.
           </p>
         </div>
         <div>
@@ -30,11 +31,12 @@
             <li><NuxtLink to="/returns">Политика возврата</NuxtLink></li>
             <li><NuxtLink to="/privacy">Обработка данных</NuxtLink></li>
             <li><NuxtLink to="/requisites">Реквизиты</NuxtLink></li>
+            <li><NuxtLink to="/contacts">Контакты</NuxtLink></li>
           </ul>
         </div>
       </div>
       <div class="legal">
-        <span>ИП «———», БИН ———————— · Казахстан</span>
+        <span>{{ sellerTitle() }} · ИИН/БИН {{ SELLER.iin ?? PENDING }} · {{ SELLER.address ?? 'Казахстан' }}</span>
         <span>wisepvp.net</span>
       </div>
     </div>

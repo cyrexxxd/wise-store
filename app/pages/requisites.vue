@@ -1,35 +1,52 @@
 <script setup lang="ts">
+import { PENDING, SELLER } from '~/data/seller'
+
 useSeoMeta({
   title: 'Реквизиты',
-  description: 'Реквизиты продавца — магазин сервера wise.',
+  description: 'Реквизиты продавца и контакты магазина wisepvp.net.',
 })
 </script>
 
 <template>
-  <LegalDoc title="Реквизиты" updated="заполняется">
-    <LegalNotice>
-      Данные продавца — заглушка. Владелец добавит реальные реквизиты ИП перед запуском
-      приёма платежей; до этого момента страница не публикует настоящих данных.
-    </LegalNotice>
+  <LegalDoc title="Реквизиты и контакты" updated="27.09.2026">
+    <SellerNotice />
 
     <h2>Продавец</h2>
     <dl>
-      <dt>Наименование</dt>
-      <dd>ИП «———»</dd>
-      <dt>БИН/ИИН</dt>
-      <dd>—————————— (12 цифр)</dd>
-      <dt>Юридический адрес</dt>
-      <dd>Республика Казахстан, —————————</dd>
-      <dt>Контактный email</dt>
-      <dd>—————@wisepvp.net</dd>
+      <dt>Организационная форма</dt>
+      <dd>{{ SELLER.legalForm ?? PENDING }}</dd>
+      <dt>Наименование / ФИО</dt>
+      <dd>{{ SELLER.name ?? PENDING }}</dd>
+      <dt>ИИН / БИН</dt>
+      <dd>{{ SELLER.iin ?? PENDING }}</dd>
+      <dt>Адрес регистрации</dt>
+      <dd>{{ SELLER.address ?? PENDING }}</dd>
+    </dl>
+
+    <h2>Контакты</h2>
+    <dl>
+      <dt>Email</dt>
+      <dd><a v-if="SELLER.email" :href="`mailto:${SELLER.email}`">{{ SELLER.email }}</a><template v-else>{{ PENDING }}</template></dd>
+      <dt>Телефон</dt>
+      <dd><a v-if="SELLER.phone" :href="`tel:${SELLER.phone.replace(/[^+\d]/g, '')}`">{{ SELLER.phone }}</a><template v-else>{{ PENDING }}</template></dd>
+      <template v-if="SELLER.telegram">
+        <dt>Telegram</dt>
+        <dd><a :href="`https://t.me/${SELLER.telegram.replace('@', '')}`" target="_blank" rel="noopener">{{ SELLER.telegram }}</a></dd>
+      </template>
       <dt>Discord</dt>
-      <dd><a href="https://discord.gg/GvwpxwJCY" target="_blank" rel="noopener">discord.gg/GvwpxwJCY</a></dd>
+      <dd><a :href="SELLER.discord" target="_blank" rel="noopener">{{ SELLER.discord.replace('https://', '') }}</a></dd>
+      <dt>Поддержка</dt>
+      <dd>{{ SELLER.supportHours }}; ответ на обращение — в течение 24 часов.</dd>
     </dl>
 
     <h2>Приём оплаты</h2>
     <p>
-      Платежи принимает сервис Robokassa (robokassa.kz) — оплата в тенге проходит на его странице,
-      после чего покупка автоматически выдаётся на сервере.
+      Платежи в тенге принимает сервис Robokassa (robokassa.kz): оплата проходит на его защищённой странице,
+      данные карты магазин не получает. После оплаты покупка автоматически выдаётся на игровом сервере.
+    </p>
+    <p>
+      Условия покупки — в <NuxtLink to="/offer">публичной оферте</NuxtLink>, возврат — в
+      <NuxtLink to="/returns">политике возврата</NuxtLink>.
     </p>
   </LegalDoc>
 </template>
