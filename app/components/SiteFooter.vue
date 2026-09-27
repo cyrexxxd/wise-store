@@ -12,7 +12,7 @@ import { PENDING, SELLER, sellerTitle } from '~/data/seller'
           <h4>О магазине</h4>
           <p>
             Официальный магазин {{ SELLER.brand }}. Оплата в тенге через Robokassa, выдача на ник автоматически.
-            Email: {{ SELLER.email ?? PENDING }} · тел.: {{ SELLER.phone ?? PENDING }} · поддержка {{ SELLER.supportHours }}.
+            Email: {{ SELLER.email ?? PENDING }}<template v-if="SELLER.phone"> · тел.: {{ SELLER.phone }}</template> · поддержка {{ SELLER.supportHours }}.
           </p>
         </div>
         <div>
@@ -36,7 +36,7 @@ import { PENDING, SELLER, sellerTitle } from '~/data/seller'
         </div>
       </div>
       <div class="legal">
-        <span>{{ sellerTitle() }} · ИИН/БИН {{ SELLER.iin ?? PENDING }} · {{ SELLER.address ?? 'Казахстан' }}</span>
+        <span>{{ sellerTitle() }}<template v-if="SELLER.iin"> · ИИН/БИН {{ SELLER.iin }}</template> · {{ SELLER.address ?? 'Казахстан' }}</span>
         <span>wisepvp.net</span>
       </div>
     </div>

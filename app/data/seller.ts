@@ -22,20 +22,22 @@ export interface Seller {
 }
 
 export const SELLER: Seller = {
-  brand: 'WISE (сервер CATIERS)',
-  legalForm: null,
-  name: null,
+  brand: 'Wise Store',
+  legalForm: 'ИП',
+  name: 'Cyrex',
+  // ИИН ИП — личный ИИН владельца: на сайте не публикуется (решение владельца 27.09)
   iin: null,
-  address: null,
-  email: null,
+  address: 'Казахстан, г. Алматы, проспект Абылай Хана 93/95',
+  email: 'wisepvp.support@gmail.com',
+  // телефон не публикуется (решение владельца 27.09), связь — email и Discord
   phone: null,
   telegram: null,
   discord: 'https://discord.gg/GvwpxwJCY',
   supportHours: 'ежедневно с 10:00 до 22:00 (Астана, UTC+5)',
 }
 
-/// Все обязательные для Robokassa поля заполнены?
-export const SELLER_COMPLETE = [SELLER.legalForm, SELLER.name, SELLER.iin, SELLER.address, SELLER.email, SELLER.phone].every(Boolean)
+/// Обязательные поля заполнены? (ИИН и телефон владелец не публикует — они не требуются.)
+export const SELLER_COMPLETE = [SELLER.legalForm, SELLER.name, SELLER.address, SELLER.email].every(Boolean)
 
 export const PENDING = 'будет указано'
 

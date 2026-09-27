@@ -18,8 +18,8 @@ useSeoMeta({
       <a class="contact tone-claws" :href="SELLER.email ? `mailto:${SELLER.email}` : undefined">
         <b>Email</b><span>{{ SELLER.email ?? PENDING }}</span>
       </a>
-      <a class="contact tone-roles" :href="SELLER.phone ? `tel:${SELLER.phone.replace(/[^+\d]/g, '')}` : undefined">
-        <b>Телефон</b><span>{{ SELLER.phone ?? PENDING }}</span>
+      <a v-if="SELLER.phone" class="contact tone-roles" :href="`tel:${SELLER.phone.replace(/[^+\d]/g, '')}`">
+        <b>Телефон</b><span>{{ SELLER.phone }}</span>
       </a>
       <a class="contact tone-titles" :href="SELLER.discord" target="_blank" rel="noopener">
         <b>Discord</b><span>{{ SELLER.discord.replace('https://', '') }}</span>
@@ -28,6 +28,6 @@ useSeoMeta({
         <b>Telegram</b><span>{{ SELLER.telegram }}</span>
       </a>
     </div>
-    <p class="contact-note">Поддержка: {{ SELLER.supportHours }}. {{ sellerTitle() }}, ИИН/БИН {{ SELLER.iin ?? PENDING }}. <NuxtLink to="/requisites">Все реквизиты</NuxtLink></p>
+    <p class="contact-note">Поддержка: {{ SELLER.supportHours }}. {{ sellerTitle() }}, {{ SELLER.address ?? PENDING }}. <NuxtLink to="/requisites">Все реквизиты</NuxtLink></p>
   </section>
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 useSeoMeta({
   title: 'Обработка данных',
-  description: 'Какие данные собирает магазин wise и как они используются.',
+  description: 'Какие данные собирает Wise Store и как они используются.',
 })
 </script>
 
@@ -40,8 +40,8 @@ useSeoMeta({
 
     <h2>5. Как удалить свои данные</h2>
     <p>
-      Напишите в <a href="https://discord.gg/GvwpxwJCY" target="_blank" rel="noopener">Discord-канал wise</a>
-      с ником и просьбой удалить данные. Данные о завершённых заказах, которые нужны для
+      Напишите на <a href="mailto:wisepvp.support@gmail.com">wisepvp.support@gmail.com</a> или в
+      <a href="https://discord.gg/GvwpxwJCY" target="_blank" rel="noopener">Discord Wise Store</a> с ником и просьбой удалить данные. Данные о завершённых заказах, которые нужны для
       бухгалтерского учёта, могут быть сохранены дольше в обезличенном виде.
     </p>
   </LegalDoc>

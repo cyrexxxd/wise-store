@@ -13,7 +13,7 @@ useSeoMeta({
 
     <h2>1. Общие положения</h2>
     <p>
-      Настоящий документ — публичная оферта {{ sellerTitle() }} (ИИН/БИН {{ SELLER.iin ?? PENDING }}, далее — «Продавец»)
+      Настоящий документ — публичная оферта {{ sellerTitle() }}<template v-if="SELLER.iin"> (ИИН/БИН {{ SELLER.iin }})</template> (далее — «Продавец»)
       любому дееспособному лицу (далее — «Покупатель») о продаже виртуальных товаров для игрового сервера
       {{ SELLER.brand }} через сайт <strong>wisepvp.net</strong>. Оплата заказа означает полное и безоговорочное
       принятие условий оферты (акцепт). Оферта регулируется законодательством Республики Казахстан.
@@ -90,10 +90,11 @@ useSeoMeta({
     <h2>11. Реквизиты Продавца</h2>
     <dl>
       <dt>Продавец</dt><dd>{{ sellerTitle() }}</dd>
-      <dt>ИИН / БИН</dt><dd>{{ SELLER.iin ?? PENDING }}</dd>
+      <template v-if="SELLER.iin"><dt>ИИН / БИН</dt><dd>{{ SELLER.iin }}</dd></template>
       <dt>Адрес</dt><dd>{{ SELLER.address ?? PENDING }}</dd>
       <dt>Email</dt><dd>{{ SELLER.email ?? PENDING }}</dd>
-      <dt>Телефон</dt><dd>{{ SELLER.phone ?? PENDING }}</dd>
+      <template v-if="SELLER.phone"><dt>Телефон</dt><dd>{{ SELLER.phone }}</dd></template>
+      <dt>Discord</dt><dd><a :href="SELLER.discord" target="_blank" rel="noopener">{{ SELLER.discord.replace('https://', '') }}</a></dd>
     </dl>
   </LegalDoc>
 </template>

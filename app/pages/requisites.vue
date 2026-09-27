@@ -17,8 +17,7 @@ useSeoMeta({
       <dd>{{ SELLER.legalForm ?? PENDING }}</dd>
       <dt>Наименование / ФИО</dt>
       <dd>{{ SELLER.name ?? PENDING }}</dd>
-      <dt>ИИН / БИН</dt>
-      <dd>{{ SELLER.iin ?? PENDING }}</dd>
+      <template v-if="SELLER.iin"><dt>ИИН / БИН</dt><dd>{{ SELLER.iin }}</dd></template>
       <dt>Адрес регистрации</dt>
       <dd>{{ SELLER.address ?? PENDING }}</dd>
     </dl>
@@ -27,8 +26,10 @@ useSeoMeta({
     <dl>
       <dt>Email</dt>
       <dd><a v-if="SELLER.email" :href="`mailto:${SELLER.email}`">{{ SELLER.email }}</a><template v-else>{{ PENDING }}</template></dd>
-      <dt>Телефон</dt>
-      <dd><a v-if="SELLER.phone" :href="`tel:${SELLER.phone.replace(/[^+\d]/g, '')}`">{{ SELLER.phone }}</a><template v-else>{{ PENDING }}</template></dd>
+      <template v-if="SELLER.phone">
+        <dt>Телефон</dt>
+        <dd><a :href="`tel:${SELLER.phone.replace(/[^+\d]/g, '')}`">{{ SELLER.phone }}</a></dd>
+      </template>
       <template v-if="SELLER.telegram">
         <dt>Telegram</dt>
         <dd><a :href="`https://t.me/${SELLER.telegram.replace('@', '')}`" target="_blank" rel="noopener">{{ SELLER.telegram }}</a></dd>
