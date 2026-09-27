@@ -1,6 +1,6 @@
 import { createHmac } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
-import { ApipayError, createInvoice, getInvoice, invoiceDescription, maskPhone, normalizeKzPhone, verifyWebhook, type ApipayConfig } from './apipay'
+import { ApipayError, apipayUserMessage, createInvoice, createInvoiceSafely, getInvoice, invoiceDescription, invoiceForLog, maskPhone, normalizeKzPhone, phoneHash, verifyWebhook, type ApipayConfig } from './apipay'
 
 const cfg: ApipayConfig = { apiKey: 'key-123', webhookSecret: 'whsec', sandbox: true }
 
@@ -66,5 +66,43 @@ describe('API client', () => {
 
   it('keeps the description within the 60 characters Kaspi shows', () => {
     expect(invoiceDescription(123, 'Роль Premium ×3, 1100 Когтей ×2, 500 Когтей').length).toBeLessThanOrEqual(60)
+  })
+})
+
+describe('createInvoiceSafely', () => {
+  const order = { invId: 9, kzt: 500, phone: '87071234567', description: 'x' }
+
+  it('recovers the existing invoice from 409 duplicate_idempotency_key', async () => {
+    const got = await createInvoiceSafely(cfg, async () => ({ status: 409, json: async () => ({ error: 'duplicate_idempotency_key', invoice_id: 321, status: 'pending' }) }), order)
+    expect(got).toEqual({ id: 321, status: 'pending' })
+  })
+
+  it('retries once after a network error with the same idempotency key', async () => {
+    const keys: string[] = []
+    let calls = 0
+    const got = await createInvoiceSafely(cfg, async (_u, init) => {
+      keys.push(JSON.parse(init.body!).external_order_id_idempotency)
+      if (++calls === 1) throw new Error('timeout')
+      return { status: 409, json: async () => ({ error: 'duplicate_idempotency_key', invoice_id: 55, status: 'processing' }) }
+    }, order)
+    expect(got.id).toBe(55)
+    expect(keys).toEqual(['wise-9', 'wise-9'])
+  })
+
+  it('does not retry a definite API refusal', async () => {
+    let calls = 0
+    await expect(createInvoiceSafely(cfg, async () => { calls++; return { status: 409, json: async () => ({ error: 'kaspi_session_expired', message: 'x' }) } }, order))
+      .rejects.toMatchObject({ code: 'kaspi_session_expired' })
+    expect(calls).toBe(1)
+    expect(apipayUserMessage(new ApipayError('x', 409, 'kaspi_session_expired'))).toMatch(/временно недоступен/)
+    expect(apipayUserMessage(new ApipayError('x', 409, 'duplicate_idempotency_key'))).toMatch(/уже выставлен/)
+  })
+
+  it('hashes the phone and strips personal data from stored invoices', () => {
+    expect(phoneHash('87071234567', 's')).toMatch(/^[0-9a-f]{64}$/)
+    expect(phoneHash('87071234567', 's')).not.toContain('8707')
+    const stored = invoiceForLog({ id: 1, amount: '1.00', status: 'paid', client_phone: '8707', client_name: 'A' } as never)
+    expect(stored).not.toHaveProperty('client_phone')
+    expect(stored).not.toHaveProperty('client_name')
   })
 })

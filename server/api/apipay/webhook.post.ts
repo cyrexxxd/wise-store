@@ -18,8 +18,8 @@ export default defineEventHandler(async (event) => {
   } catch {
     throw createError({ statusCode: 400, statusMessage: 'bad json' })
   }
-  // интересуют только смены статуса счёта; прочие события (qr_scanned, refunded, чеки) — принять и забыть
-  if (payload.event !== 'invoice.status_changed' || !payload.invoice || typeof payload.invoice.id !== 'number') {
+  // смена статуса и возврат (invoice.refunded несёт is_fully_refunded); прочие события (qr_scanned, чеки) — принять и забыть
+  if ((payload.event !== 'invoice.status_changed' && payload.event !== 'invoice.refunded') || !payload.invoice || typeof payload.invoice.id !== 'number') {
     return { ok: true }
   }
   const allowTestDelivery = String(useRuntimeConfig().deliveryAllowTest) === '1'

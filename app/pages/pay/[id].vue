@@ -9,10 +9,12 @@ useSeoMeta({ title: 'Оплата в Kaspi', robots: 'noindex' })
 const route = useRoute()
 const id = String(route.params.id)
 const token = String(route.query.t ?? '')
-interface OrderState { invId: number; state: 'pending' | 'paid' | 'failed'; providerStatus: string | null; amount: number; test: boolean }
+interface OrderState { invId: number; state: 'pending' | 'paid' | 'failed' | 'refunded'; providerStatus: string | null; amount: number; test: boolean }
 const order = ref<OrderState | null>(null)
 const notFound = ref(false)
 let timer: ReturnType<typeof setTimeout> | undefined
+// после отмены/ошибки ещё 15 минут проверяем реже: Kaspi может провести оплату в последний момент
+const startedFailedAt = ref<number | null>(null)
 
 async function poll() {
   try {
@@ -22,6 +24,10 @@ async function poll() {
   }
   if (order.value?.state === 'paid') useCart().items.value = []
   if (order.value?.state === 'pending') timer = setTimeout(poll, 5000)
+  if (order.value?.state === 'failed') {
+    startedFailedAt.value ??= Date.now()
+    if (Date.now() - startedFailedAt.value < 15 * 60_000) timer = setTimeout(poll, 30_000)
+  }
 }
 
 onMounted(poll)
@@ -44,8 +50,8 @@ onBeforeUnmount(() => clearTimeout(timer))
         <li>Проверьте сумму и оплатите. Счёт действует 24 часа.</li>
         <li>Эта страница обновится сама — покупка придёт в игру за несколько минут.</li>
       </ol>
-      <p class="hint">Счёт не пришёл? Проверьте номер в Kaspi → «Мои платежи» → «Счета». Можно закрыть страницу —
-        оплата всё равно дойдёт, и выдача произойдёт автоматически.</p>
+      <p class="hint">Счёт не пришёл? Проверьте номер в Kaspi → «Мои платежи» → «Счета». Страницу можно закрыть:
+        сайт сам проверяет оплату, и покупка будет выдана автоматически.</p>
     </div>
 
     <div v-else-if="order.state === 'paid'" class="kaspi-done">
@@ -54,9 +60,17 @@ onBeforeUnmount(() => clearTimeout(timer))
       <NuxtLink class="btn btn-gold" to="/">Вернуться в магазин</NuxtLink>
     </div>
 
+    <div v-else-if="order.state === 'refunded'" class="kaspi-fail">
+      <h2>Оплата возвращена</h2>
+      <p>По этому заказу оформлен возврат денег в Kaspi. Вопросы — в поддержку.</p>
+      <NuxtLink class="btn btn-pink" to="/contacts">Контакты</NuxtLink>
+    </div>
+
     <div v-else class="kaspi-fail">
-      <h2>Счёт не оплачен</h2>
-      <p>Счёт {{ order.providerStatus === 'expired' ? 'истёк' : 'отменён' }} — деньги не списаны. Корзина сохранилась, можно оформить заново.</p>
+      <h2>{{ order.providerStatus === 'error' ? 'Kaspi не смог выставить счёт' : 'Счёт пока не оплачен' }}</h2>
+      <p v-if="order.providerStatus === 'error'">Проверьте номер Kaspi и оформите заказ ещё раз или оплатите картой.</p>
+      <p v-else>Счёт {{ order.providerStatus === 'expired' ? 'истёк' : 'отменён' }}. Если вы всё же успели оплатить — покупка придёт
+        автоматически, страница продолжает проверять. Если нет — корзина сохранилась, оформите заново.</p>
       <NuxtLink class="btn btn-pink" to="/">В магазин</NuxtLink>
     </div>
   </section>

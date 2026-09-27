@@ -36,6 +36,8 @@ ALTER TABLE orders ADD COLUMN IF NOT EXISTS provider TEXT NOT NULL DEFAULT 'robo
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS provider_ref TEXT;
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS provider_status TEXT;
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS public_token UUID NOT NULL DEFAULT gen_random_uuid();
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS phone_hash TEXT;
+CREATE INDEX IF NOT EXISTS orders_phone_hash ON orders (phone_hash) WHERE phone_hash IS NOT NULL;
 CREATE UNIQUE INDEX IF NOT EXISTS orders_provider_ref ON orders (provider, provider_ref) WHERE provider_ref IS NOT NULL;
 CREATE TABLE IF NOT EXISTS deliveries (
   id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -61,10 +63,10 @@ export type Provider = 'robokassa' | 'apipay'
 
 /// Новый заказ. token — секрет страницы ожидания оплаты (номер заказа последовательный, по нему одному статус не отдаём).
 export async function createOrder(db: Db, nick: string, lines: readonly CheckoutLine[], totalKzt: number, isTest: boolean,
-  provider: Provider = 'robokassa'): Promise<{ invId: number; token: string }> {
+  provider: Provider = 'robokassa', phoneHash: string | null = null): Promise<{ invId: number; token: string }> {
   const rows = await db.query<{ inv_id: number; public_token: string }>(
-    'INSERT INTO orders (nick, items, amount_kzt, is_test, provider) VALUES ($1, $2::jsonb, $3, $4, $5) RETURNING inv_id, public_token::text AS public_token',
-    [nick, JSON.stringify(lines), totalKzt, isTest, provider],
+    'INSERT INTO orders (nick, items, amount_kzt, is_test, provider, phone_hash) VALUES ($1, $2::jsonb, $3, $4, $5, $6) RETURNING inv_id, public_token::text AS public_token',
+    [nick, JSON.stringify(lines), totalKzt, isTest, provider, phoneHash],
   )
   return { invId: Number(rows[0]!.inv_id), token: rows[0]!.public_token }
 }
@@ -72,6 +74,57 @@ export async function createOrder(db: Db, nick: string, lines: readonly Checkout
 /// Счёт у платёжного сервиса выставлен — запомнить его id (для вебхука и сверки статуса).
 export async function setProviderRef(db: Db, invId: number, ref: string, status: string | null): Promise<void> {
   await db.query('UPDATE orders SET provider_ref = $2, provider_status = $3 WHERE inv_id = $1', [invId, ref, status])
+}
+
+/// Неоплаченные счета Kaspi на этот номер за сутки (кроме отменённых/истёкших) — защита от спама счетами чужим людям.
+export async function openKaspiInvoicesForPhone(db: Db, phoneHash: string): Promise<number> {
+  const rows = await db.query<{ n: string }>(
+    `SELECT count(*)::text AS n FROM orders WHERE provider = 'apipay' AND phone_hash = $1 AND status = 'pending'
+       AND created_at > now() - interval '24 hours' AND coalesce(provider_status, '') NOT IN ('cancelled', 'expired', 'error')`,
+    [phoneHash],
+  )
+  return Number(rows[0]!.n)
+}
+
+/// Счета Kaspi, выставленные с начала суток по Алматы: бюджет ниже дневного лимита тарифа ApiPay.
+export async function kaspiInvoicesToday(db: Db): Promise<number> {
+  const rows = await db.query<{ n: string }>(
+    `SELECT count(*)::text AS n FROM orders WHERE provider = 'apipay'
+       AND created_at >= (date_trunc('day', now() AT TIME ZONE 'Asia/Almaty') AT TIME ZONE 'Asia/Almaty')`,
+  )
+  return Number(rows[0]!.n)
+}
+
+/// Привязать счёт ApiPay к заказу, если связь не записалась при выставлении (только если ещё не привязан).
+export async function linkProviderRef(db: Db, invId: number, ref: string): Promise<boolean> {
+  const rows = await db.query(
+    `UPDATE orders SET provider_ref = $2 WHERE inv_id = $1 AND provider = 'apipay' AND provider_ref IS NULL RETURNING inv_id`,
+    [invId, ref],
+  )
+  return rows.length > 0
+}
+
+/// Полный возврат: заказ refunded, невыданные строки выдачи снимаются (уже выданное снимает администратор вручную).
+export async function refundOrder(db: Db, invId: number): Promise<{ undelivered: number; delivered: number }> {
+  return db.tx(async (q) => {
+    await q.query(`UPDATE orders SET status = 'refunded' WHERE inv_id = $1`, [invId])
+    const cancelled = await q.query(
+      `UPDATE deliveries SET status = 'failed', error = 'refunded' WHERE inv_id = $1 AND status IN ('pending', 'claimed') RETURNING id`,
+      [invId],
+    )
+    const done = await q.query(`SELECT 1 FROM deliveries WHERE inv_id = $1 AND status = 'done'`, [invId])
+    return { undelivered: cancelled.length, delivered: done.length }
+  })
+}
+
+/// Неоплаченные Kaspi-заказы моложе 25 ч (счёт живёт 24 ч) — для фоновой сверки со статусом в ApiPay.
+export async function kaspiOrdersToSync(db: Db, limit = 20): Promise<Array<{ invId: number; providerRef: string | null }>> {
+  const rows = await db.query<{ inv_id: number; provider_ref: string | null }>(
+    `SELECT inv_id, provider_ref FROM orders WHERE provider = 'apipay' AND status = 'pending'
+       AND created_at > now() - interval '25 hours' ORDER BY created_at DESC LIMIT $1`,
+    [limit],
+  )
+  return rows.map((r) => ({ invId: Number(r.inv_id), providerRef: r.provider_ref }))
 }
 
 export async function setProviderStatus(db: Db, invId: number, status: string): Promise<void> {
@@ -112,7 +165,7 @@ export type PaidResult = 'paid' | 'paid_test' | 'already_paid' | 'unknown_order'
 /// выдачи. Повтор уведомления — already_paid без новых строк (блокировка строки + UNIQUE(inv_id, line_no)).
 /// Тестовый заказ — paid_test: оплачен, но строк выдачи нет (если не allowTestDelivery).
 export async function markPaid(db: Db, invId: number, outSum: string, raw: Record<string, unknown>,
-  opts: { allowTestDelivery?: boolean; provider?: Provider; forceTest?: boolean } = {}): Promise<PaidResult> {
+  opts: { allowTestDelivery?: boolean; provider?: Provider; forceTest?: boolean; isTest?: boolean } = {}): Promise<PaidResult> {
   return db.tx(async (q) => {
     const rows = await q.query<{ nick: string; items: unknown; amount_kzt: string; status: string; is_test: boolean; provider: string }>(
       'SELECT nick, items, amount_kzt, status, is_test, provider FROM orders WHERE inv_id = $1 FOR UPDATE',
@@ -127,7 +180,9 @@ export async function markPaid(db: Db, invId: number, outSum: string, raw: Recor
     if (order.status === 'refunded') return 'refunded'
     await q.query("UPDATE orders SET status = 'paid', paid_at = now(), result_raw = $2::jsonb WHERE inv_id = $1", [invId, JSON.stringify(raw)])
     // тестовый заказ или тестовая (песочная) оплата — без выдачи
-    if ((order.is_test || opts.forceTest) && !opts.allowTestDelivery) return 'paid_test'
+    // isTest (если передан) — решение платёжного сервиса об этой оплате; иначе — флаг заказа
+    const test = opts.isTest ?? (order.is_test || Boolean(opts.forceTest))
+    if (test && !opts.allowTestDelivery) return 'paid_test'
     const lines = (typeof order.items === 'string' ? JSON.parse(order.items) : order.items) as CheckoutLine[]
     for (const cmd of deliveryCommands(lines)) {
       await q.query(

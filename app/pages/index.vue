@@ -22,7 +22,7 @@ const tiles = [
       <div class="hero-text">
         <span class="hero-kicker">CATIERS · Центральная Азия</span>
         <h1>Магазин <span class="grad">CATIERS</span></h1>
-        <p>Роли, Когти и косметика для PvP-сервера. Оплата в тенге через Robokassa, покупка приходит на ник, указанный в корзине — даже если ты не в сети.</p>
+        <p>Роли, Когти и косметика для PvP-сервера. Оплата в тенге через Kaspi или картой, покупка приходит на ник, указанный в корзине — даже если ты не в сети.</p>
         <div class="hero-cta">
           <NuxtLink class="btn btn-gold" to="/roles">Выбрать роль</NuxtLink>
           <NuxtLink class="btn btn-pink" to="/currency">Купить Когти</NuxtLink>

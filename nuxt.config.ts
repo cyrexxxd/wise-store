@@ -82,6 +82,8 @@ export default defineNuxtConfig({
       sandbox: '1',
       // только для локального стенда (мок ApiPay); на Render не задавать
       baseUrl: '',
+      // бюджет счетов Kaspi в сутки (ниже дневного лимита тарифа ApiPay: trial 50, «Старт» 30)
+      dailyLimit: '25',
     },
     databaseUrl: '',
     // токен плагина WiseDelivery (X-Server-Token), не короче 32 символов

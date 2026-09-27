@@ -142,7 +142,7 @@ onBeforeUnmount(() => {
         <div v-if="method === 'kaspi'" class="nick-field">
           <label for="kaspi-phone">Номер Kaspi</label>
           <input id="kaspi-phone" v-model="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="8 7XX XXX XX XX">
-          <small>На этот номер придёт счёт в приложении Kaspi. Номер мы не сохраняем.</small>
+          <small>На этот номер придёт счёт в приложении Kaspi. Сам номер мы не сохраняем.</small>
         </div>
         <div class="totals">
           <div><span class="k">Позиций</span><span class="v">{{ count }}</span></div>

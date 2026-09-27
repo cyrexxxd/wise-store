@@ -55,10 +55,25 @@ export interface ApipayInvoice {
   external_order_id?: string | null
   is_sandbox?: boolean
   error_message?: string | null
+  /** Полный возврат: статус остаётся paid (статуса refunded у ApiPay нет). */
+  is_fully_refunded?: boolean
+  total_refunded?: string
+}
+
+/// Что из счёта сохраняем в заказ: без номера телефона и имени покупателя (client_phone, client_name, phone_number).
+export function invoiceForLog(inv: ApipayInvoice): Record<string, unknown> {
+  const { id, amount, status, is_sandbox, is_fully_refunded, total_refunded } = inv
+  const extra = inv as unknown as Record<string, unknown>
+  return { id, amount, status, is_sandbox, is_fully_refunded, total_refunded, kaspi_invoice_id: extra.kaspi_invoice_id ?? null, paid_at: extra.paid_at ?? null }
+}
+
+/// Номер телефона в базе не храним — только HMAC (для лимита «не больше N неоплаченных счетов на номер»).
+export function phoneHash(phone: string, secret: string): string {
+  return createHmac('sha256', secret).update(`phone:${phone}`).digest('hex')
 }
 
 export class ApipayError extends Error {
-  constructor(message: string, readonly status: number, readonly code: string | null) {
+  constructor(message: string, readonly status: number, readonly code: string | null, readonly body: Record<string, unknown> = {}) {
     super(message)
   }
 }
@@ -76,7 +91,7 @@ async function call<T>(cfg: ApipayConfig, fetchFn: FetchFn, method: string, path
   if (res.status >= 400) {
     const code = typeof data.error_code === 'string' ? data.error_code : typeof data.error === 'string' ? data.error : null
     const message = typeof data.message === 'string' ? data.message : `ApiPay HTTP ${res.status}`
-    throw new ApipayError(message, res.status, code)
+    throw new ApipayError(message, res.status, code, data)
   }
   return data as T
 }
@@ -100,6 +115,30 @@ export function createInvoice(cfg: ApipayConfig, fetchFn: FetchFn,
   })
 }
 
+/// Выставить счёт и не потерять его: при таймауте/сбое сети повторяем тем же ключом идемпотентности — ApiPay
+/// отвечает 409 duplicate_idempotency_key с invoice_id уже созданного счёта. null — счёт точно не создан.
+export async function createInvoiceSafely(cfg: ApipayConfig, fetchFn: FetchFn,
+  order: { invId: number; kzt: number; phone: string; description: string }): Promise<{ id: number; status: string }> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const inv = await createInvoice(cfg, fetchFn, order)
+      return { id: inv.id, status: inv.status }
+    } catch (e) {
+      if (e instanceof ApipayError && e.code === 'duplicate_idempotency_key' && typeof e.body.invoice_id === 'number') {
+        return { id: e.body.invoice_id, status: String(e.body.status ?? 'processing') }
+      }
+      // ответ ApiPay (4xx/5xx) — решение принято, повтор не поможет; сеть/таймаут — счёт мог создаться, повторяем
+      if (e instanceof ApipayError || attempt >= 2) throw e
+    }
+  }
+}
+
+/// Счёт ApiPay по нашему номеру заказа (external_order_id) — если связь «заказ ↔ счёт» не записалась.
+export async function findInvoiceByOrder(cfg: ApipayConfig, fetchFn: FetchFn, invId: number): Promise<ApipayInvoice | null> {
+  const page = await call<{ data?: ApipayInvoice[] }>(cfg, fetchFn, 'GET', `/invoices?search=${invId}&per_page=20`)
+  return (page.data ?? []).find((i) => i.external_order_id === String(invId)) ?? null
+}
+
 export function getInvoice(cfg: ApipayConfig, fetchFn: FetchFn, id: number): Promise<ApipayInvoice> {
   return call<ApipayInvoice>(cfg, fetchFn, 'GET', `/invoices/${id}`)
 }
@@ -114,7 +153,8 @@ export function apipayUserMessage(e: unknown): string {
   if (e instanceof ApipayError) {
     if (e.status === 422) return 'Проверьте номер: на него должен быть зарегистрирован Kaspi.'
     if (e.status === 429) return 'Сейчас много оплат — попробуйте через минуту.'
-    if (e.status === 409) return 'Счёт по этому заказу уже выставлен — откройте приложение Kaspi.'
+    if (e.code === 'duplicate_idempotency_key') return 'Счёт по этому заказу уже выставлен — откройте приложение Kaspi.'
+    if (e.status === 409) return 'Kaspi временно недоступен. Попробуйте позже или оплатите картой.'
   }
   return 'Kaspi сейчас не отвечает. Попробуйте ещё раз или оплатите картой.'
 }
