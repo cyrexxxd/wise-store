@@ -54,3 +54,12 @@ describe('deliveryCommands', () => {
     expect(() => deliveryCommands([{ slug: 'removed-product', qty: 1, deliver: [] }])).toThrow()
   })
 })
+
+describe('role bonuses', () => {
+  it('Wise gives +150 and Premium +400 Claws with every purchase, CAT none', () => {
+    const bonus = (slug: string) => CATALOG.find((p) => p.slug === slug)!.deliver.filter((t) => t.startsWith('claws deliver'))
+    expect(bonus('role-cat')).toEqual([])
+    expect(bonus('role-wise')).toEqual(['claws deliver {nick} 150 wise-{delivery}'])
+    expect(bonus('role-premium')).toEqual(['claws deliver {nick} 400 wise-{delivery}'])
+  })
+})

@@ -35,7 +35,8 @@ export interface CatalogEntry extends StoreProduct {
 
 const ROLE_DAYS = 30
 
-function role(slug: string, name: string, group: string, price: number, sortOrder: number, tone: string, description: string): CatalogEntry {
+/// clawsBonus — Когти в подарок к каждой покупке роли (отдельная строка выдачи со своим UUID → свой ref).
+function role(slug: string, name: string, group: string, price: number, sortOrder: number, tone: string, description: string, clawsBonus = 0): CatalogEntry {
   return {
     slug,
     name,
@@ -48,6 +49,7 @@ function role(slug: string, name: string, group: string, price: number, sortOrde
     tone,
     deliver: [
       `lp user {nick} parent addtemp ${group} ${ROLE_DAYS}d accumulate`,
+      ...(clawsBonus > 0 ? [`claws deliver {nick} ${clawsBonus} wise-{delivery}`] : []),
       `tellraw {nick} ${JSON.stringify([{ text: 'Магазин » ', color: 'gold' }, { text: `${name} выдана на ${ROLE_DAYS} дней. Спасибо за поддержку!`, color: 'white' }])}`,
     ],
   }
@@ -76,8 +78,8 @@ function claws(slug: string, amount: number, bonus: number, price: number, sortO
 
 export const CATALOG: readonly CatalogEntry[] = [
   role('role-cat', 'Роль CAT', 'cat', 1599, 1, 'cat', 'Вся косметика сервера, свой префикс и суффикс, создание клана. 30 дней, повторная покупка продлевает срок.'),
-  role('role-wise', 'Роль Wise', 'wise', 2599, 2, 'wise', 'Всё, что даёт CAT, и больше. 30 дней, повторная покупка продлевает срок.'),
-  role('role-premium', 'Роль Premium', 'premium', 3799, 3, 'premium', 'Высшая роль сервера: всё, что даёт Wise, и больше. 30 дней, повторная покупка продлевает срок.'),
+  role('role-wise', 'Роль Wise', 'wise', 2599, 2, 'wise', 'Всё, что даёт CAT, плюс тримы на броню, ещё один набор китов и 150 Когтей к каждой покупке. 30 дней, повторная покупка продлевает срок.', 150),
+  role('role-premium', 'Роль Premium', 'premium', 3799, 3, 'premium', 'Высшая роль: всё, что даёт Wise, ещё один набор китов и 400 Когтей к каждой покупке. 30 дней, повторная покупка продлевает срок.', 400),
   claws('claws-100', 100, 0, 500, 10, 'claws_1'),
   claws('claws-250', 250, 0, 1250, 11, 'claws_2'),
   claws('claws-500', 500, 0, 2500, 12, 'claws_3'),
