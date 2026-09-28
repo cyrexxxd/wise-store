@@ -261,12 +261,13 @@
   .contact-note a { color: var(--accent-hi); }
 
   /* ---- способ оплаты в корзине, ожидание Kaspi ---- */
-  .pay-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
-  .pm { text-align: left; padding: 10px 12px; border-radius: 11px; cursor: pointer; background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
-  .pm b { display: block; font-family: var(--f-display); }
+  .pay-methods { margin: 12px 0; }
+  .pm { text-align: left; padding: 10px 12px; border-radius: 11px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
+  .pm b { display: flex; align-items: center; gap: 6px; font-family: var(--f-display); }
+  .pm-logo { width: 20px; height: 20px; flex: none; }
+  .pay-logo { width: 16px; height: 16px; margin: 0 4px 0 2px; vertical-align: -3px; }
   .pm span { font-size: .74rem; color: var(--muted); }
   .pm.kaspi.on { border-color: #F14635; background: color-mix(in srgb, #F14635 14%, var(--surface)); }
-  .pm.card.on { border-color: #3AA8FF; background: color-mix(in srgb, #3AA8FF 12%, var(--surface)); }
   .kaspi-wait, .kaspi-done, .kaspi-fail { max-width: 640px; padding: 24px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); }
   .kaspi-wait ol { margin: 0 0 12px; padding-left: 1.2em; line-height: 1.9; }
   .kaspi-wait .hint { color: var(--muted); font-size: .86rem; margin: 0; }

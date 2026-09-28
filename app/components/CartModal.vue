@@ -1,20 +1,19 @@
 <script setup lang="ts">
 // Модалка корзины. "Перейти к оплате" отправляет ник, состав корзины и способ оплаты на /api/checkout.
 // Kaspi (ApiPay): сервер выставляет счёт на номер покупателя → страница /pay/<заказ> ждёт оплату.
-// Карта (Robokassa): сервер возвращает ссылку на страницу оплаты Robokassa. Выдачу делает плагин WiseDelivery.
+// Выдачу делает плагин WiseDelivery. Оплата картой (Robokassa) на сервере осталась, но в корзине скрыта — магазин не активирован.
 import { useCart } from '~/composables/useCart'
 import { approxRub, formatKzt } from '~/utils/formatPrice'
 
 const { items, nick, isOpen, count, total, changeQty, remove, close } = useCart()
 const { kztPerRub } = useRuntimeConfig().public
 
-// способы оплаты, подключённые на сервере; Kaspi — по умолчанию (большинство покупателей из Казахстана)
+// способы оплаты, подключённые на сервере; в корзине сейчас только Kaspi
 const { data: methods } = useFetch<{ kaspi: boolean; card: boolean }>('/api/checkout/methods', { key: 'checkout-methods', server: false })
-const method = ref<'kaspi' | 'card'>('kaspi')
+const method = 'kaspi' as const
 // номер Kaspi: 10 цифр после «+7» (747 131 14 61); точную проверку делает сервер (normalizeKzPhone)
 const phone = ref('')
-watch(methods, (m) => { if (m && !m.kaspi && m.card) method.value = 'card' })
-const methodReady = computed(() => (method.value === 'kaspi' ? methods.value?.kaspi : methods.value?.card) ?? false)
+const methodReady = computed(() => methods.value?.kaspi ?? false)
 
 function phoneDigits(raw: string, prev: string): string {
   let d = raw.replace(/\D/g, '')
@@ -26,8 +25,14 @@ function phoneDigits(raw: string, prev: string): string {
   }
   return d.slice(0, 10)
 }
+// (747) 131-14-61 — по мере ввода
 function formatPhone(d: string): string {
-  return [d.slice(0, 3), d.slice(3, 6), d.slice(6, 8), d.slice(8, 10)].filter(Boolean).join(' ')
+  if (!d) return ''
+  let out = `(${d.slice(0, 3)}`
+  if (d.length > 3) out += `) ${d.slice(3, 6)}`
+  if (d.length > 6) out += `-${d.slice(6, 8)}`
+  if (d.length > 8) out += `-${d.slice(8, 10)}`
+  return out
 }
 const phoneShown = computed(() => formatPhone(phone.value))
 // вставили 12+ цифр — это номер карты, а не телефон
@@ -39,12 +44,11 @@ function onPhoneInput(event: Event) {
   phone.value = cardLike.value ? '' : phoneDigits(input.value, phone.value)
   input.value = phoneShown.value
 }
-const phoneOk = computed(() => method.value !== 'kaspi' || (phone.value.length === 10 && phone.value.startsWith('7')))
+const phoneOk = computed(() => phone.value.length === 10 && phone.value.startsWith('7'))
 const phoneHint = computed(() => {
-  if (method.value !== 'kaspi') return null
   if (cardLike.value) return 'Это номер карты. Нужен номер телефона, к которому привязан Kaspi'
   if (!phone.value || phoneOk.value) return null
-  return phone.value.startsWith('7') ? `Ещё ${10 - phone.value.length} цифр` : 'Номер казахстанский: после +7 идёт 7XX'
+  return phone.value.startsWith('7') ? `Ещё ${10 - phone.value.length} цифр` : 'Номер казахстанский: после +7 идёт (7__)'
 })
 
 const isSubmitting = ref(false)
@@ -54,10 +58,10 @@ const nickOk = computed(() => nick.value.trim().length > 0)
 const canSubmit = computed(() => items.value.length > 0 && nickOk.value && methodReady.value && phoneOk.value && !isSubmitting.value)
 const payLabel = computed(() => {
   if (isSubmitting.value) return 'Оформляем…'
-  if (!methodReady.value) return 'Этот способ оплаты скоро откроется'
+  if (!methodReady.value) return 'Оплата временно недоступна'
   if (!nickOk.value) return 'Укажите ник в игре'
-  if (method.value === 'kaspi' && !phoneOk.value) return 'Укажите номер Kaspi'
-  return method.value === 'kaspi' ? 'Выставить счёт в Kaspi' : 'Перейти к оплате картой'
+  if (!phoneOk.value) return 'Укажите номер Kaspi'
+  return 'Выставить счёт в Kaspi'
 })
 
 function errorMessage(error: unknown): string {
@@ -70,16 +74,14 @@ async function submitOrder() {
   isSubmitting.value = true
   submitError.value = null
   try {
-    const res = await $fetch<{ url?: string; pay?: string }>('/api/checkout', {
+    const res = await $fetch<{ pay?: string }>('/api/checkout', {
       method: 'POST',
-      body: { nick: nick.value.trim(), items: items.value.map((i) => ({ slug: i.slug, qty: i.qty })), method: method.value, phone: method.value === 'kaspi' ? `+7${phone.value}` : '' },
+      body: { nick: nick.value.trim(), items: items.value.map((i) => ({ slug: i.slug, qty: i.qty })), method, phone: `+7${phone.value}` },
     })
     if (res.pay) {
       close()
       await navigateTo(res.pay)
       isSubmitting.value = false
-    } else if (res.url) {
-      window.location.href = res.url
     }
   } catch (error) {
     submitError.value = errorMessage(error)
@@ -132,7 +134,6 @@ onBeforeUnmount(() => {
     <div class="modal">
       <div class="modal-head">
         <h2 id="cart-title">Корзина</h2>
-        <span class="n">{{ items.length ? `${count} шт.` : 'пусто' }}</span>
         <button ref="closeBtnRef" class="x" aria-label="Закрыть корзину" @click="close">✕</button>
       </div>
 
@@ -169,15 +170,12 @@ onBeforeUnmount(() => {
           >
           <small>Покупка придёт на этот ник. Проверьте регистр — изменить после оплаты нельзя.</small>
         </div>
-        <div class="pay-methods" role="radiogroup" aria-label="Способ оплаты">
-          <button type="button" class="pm kaspi" :class="{ on: method === 'kaspi' }" role="radio" :aria-checked="method === 'kaspi'" @click="method = 'kaspi'">
-            <b>Kaspi</b><span>{{ methods?.kaspi ? 'счёт в приложении Kaspi' : 'скоро' }}</span>
-          </button>
-          <button type="button" class="pm card" :class="{ on: method === 'card' }" role="radio" :aria-checked="method === 'card'" @click="method = 'card'">
-            <b>Карта</b><span>{{ methods?.card ? 'Visa / Mastercard, Robokassa' : 'скоро' }}</span>
-          </button>
+        <div class="pay-methods">
+          <div class="pm kaspi on">
+            <b><img class="pm-logo" src="/icons/kaspi.svg" alt="" width="20" height="20">Kaspi</b><span>счёт в приложении Kaspi</span>
+          </div>
         </div>
-        <div v-if="method === 'kaspi'" class="nick-field">
+        <div class="nick-field">
           <label for="kaspi-phone">Номер Kaspi</label>
           <div class="phone-input" :class="{ bad: phoneHint }">
             <span class="cc">+7</span>
@@ -187,7 +185,7 @@ onBeforeUnmount(() => {
               type="tel"
               inputmode="numeric"
               autocomplete="tel-national"
-              placeholder="7XX XXX XX XX"
+              placeholder="(___) ___-__-__"
               @input="onPhoneInput"
               @change="onPhoneInput"
             >
@@ -204,7 +202,7 @@ onBeforeUnmount(() => {
         <button class="pay" :disabled="!canSubmit" @click="submitOrder">
           {{ payLabel }}
         </button>
-        <p class="note">Kaspi — счёт по номеру через ApiPay, оплата в приложении Kaspi. Карта — через Robokassa, в тенге; сумму в другой валюте пересчитывает ваш банк.<br>Нажимая кнопку, вы соглашаетесь с <NuxtLink to="/offer" @click="close">офертой</NuxtLink>.</p>
+        <p class="note">Нажимая кнопку, вы соглашаетесь с <NuxtLink to="/offer" @click="close">офертой</NuxtLink>.</p>
       </div>
     </div>
   </div>

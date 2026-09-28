@@ -457,7 +457,6 @@
 
   .modal-head { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--line); flex: none; }
   .modal-head h2 { font-family: var(--f-display); font-weight: 700; font-size: 1.05rem; margin: 0; }
-  .modal-head .n { font-family: var(--f-mono); font-size: 0.74rem; color: var(--muted); }
   .x { margin-left: auto; width: 28px; height: 28px; display: grid; place-items: center; background: none; border: 1px solid var(--line); border-radius: 7px; color: var(--ink-2); font-size: 1rem; cursor: pointer; }
   .x:hover { border-color: var(--accent); color: var(--accent-hi); }
 
@@ -481,7 +480,7 @@
   .cart-error { margin: 0 0 10px; font-size: 0.82rem; color: #ff6b6b; text-align: center; }
 
   .modal-foot { flex: none; border-top: 1px solid var(--line); background: var(--bg-2); padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 13px; border-radius: 0 0 16px 16px; }
-  .nick-field label { display: block; font-family: var(--f-mono); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .nick-field label { display: block; font-size: 0.86rem; font-weight: 600; color: var(--ink-2); margin-bottom: 6px; }
   .nick-field input { width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: var(--f-mono); font-size: 0.9rem; padding: 11px 12px; }
   .nick-field input:focus { outline: none; border-color: var(--accent); }
   .nick-field small { display: block; margin-top: 6px; font-size: 0.76rem; color: var(--muted); }

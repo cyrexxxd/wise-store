@@ -11,7 +11,7 @@ import { PENDING, SELLER, sellerTitle } from '~/data/seller'
         <div>
           <h4>О магазине</h4>
           <p>
-            Официальный магазин {{ SELLER.brand }}. Оплата в тенге через Robokassa, выдача на ник автоматически.
+            Официальный магазин {{ SELLER.brand }}. Оплата в тенге через <img class="pay-logo" src="/icons/kaspi.svg" alt="" width="16" height="16">Kaspi, выдача на ник автоматически.
             Email: {{ SELLER.email ?? PENDING }}<template v-if="SELLER.phone"> · тел.: {{ SELLER.phone }}</template> · поддержка {{ SELLER.supportHours }}.
           </p>
         </div>

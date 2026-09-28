@@ -79,7 +79,7 @@ onBeforeUnmount(() => clearTimeout(timer))
 
     <div v-else class="kaspi-fail">
       <h2>{{ order.providerStatus === 'error' ? 'Kaspi не смог выставить счёт' : 'Счёт пока не оплачен' }}</h2>
-      <p v-if="order.providerStatus === 'error'">Проверьте номер Kaspi и оформите заказ ещё раз или оплатите картой.</p>
+      <p v-if="order.providerStatus === 'error'">Проверьте номер Kaspi и оформите заказ ещё раз.</p>
       <p v-else>Счёт {{ order.providerStatus === 'expired' ? 'истёк' : 'отменён' }}. Если вы всё же успели оплатить — покупка придёт
         автоматически, страница продолжает проверять. Если нет — корзина сохранилась, оформите заново.</p>
       <NuxtLink class="btn btn-pink" to="/">В магазин</NuxtLink>
