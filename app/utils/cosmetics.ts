@@ -66,8 +66,9 @@ export function formatChance(chance: number): string {
   return `${chance < 0.1 ? chance.toFixed(3) : chance < 1 ? chance.toFixed(2) : chance.toFixed(2).replace(/\.?0+$/, '')}%`
 }
 
-/// Градиент ника для превью (CSS).
+/// Градиент ника для превью (CSS). Всегда linear-gradient: значение идёт в background-image, а голый цвет
+/// там недопустим — браузер его отбрасывает, и ник с одним цветом (обычная редкость) становится невидимым.
 export function nameGradient(colors: readonly string[] | undefined): string {
   const c = colors?.length ? colors : ['#FFFFFF']
-  return c.length === 1 ? c[0]! : `linear-gradient(90deg, ${c.join(', ')})`
+  return `linear-gradient(90deg, ${(c.length === 1 ? [c[0], c[0]] : c).join(', ')})`
 }
