@@ -85,6 +85,29 @@ export default defineNuxtConfig({
       // бюджет счетов Kaspi в сутки (ниже дневного лимита тарифа ApiPay: trial 50, «Старт» 30)
       dailyLimit: '25',
     },
+    // Через кого выставлять НОВЫЕ счета Kaspi: apipay (сервис ApiPay) | kaspipos (напрямую от кассира Kaspi Pay).
+    kaspiProvider: 'apipay',
+    // секрет HMAC номера телефона (лимит «счетов на номер»); пусто — берётся секрет вебхука ApiPay (как было)
+    phoneHashSecret: '',
+    // Kaspi Pay от имени кассира (порт tapter-dev/kaspi-pos-automation). Все значения печатает
+    // scripts/kaspipos-login.mjs после входа по SMS; устройство и сессия — секреты уровня строки БД.
+    kaspipos: {
+      deviceId: '',
+      installId: '',
+      // ECDSA P-256 устройства, pkcs8 DER base64
+      privateKey: '',
+      tokenSn: '',
+      // секрет vtoken (hex)
+      secret: '',
+      profileId: '',
+      // версия приложения Kaspi Pay: при OldVersionToUpdate — поднять (актуальные — в issues tapter)
+      appVersion: '26.0921',
+      appBuild: '1115',
+      // только для тестов (мок); на Render не задавать
+      baseUrl: '',
+      // не больше стольких счетов в сутки — защита от спама (лимита тарифа у кассира нет)
+      dailyLimit: '40',
+    },
     databaseUrl: '',
     // токен плагина WiseDelivery (X-Server-Token), не короче 32 символов
     deliveryServerToken: '',

@@ -8,3 +8,6 @@ node_modules/
 .data/
 dist/
 *.log
+
+# личный журнал задачи (доступы, ход работ) — не в git
+progress.txt

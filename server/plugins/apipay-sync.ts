@@ -16,7 +16,7 @@ export default defineNitroPlugin(() => {
     try {
       const db = await useDb()
       const allowTestDelivery = String(useRuntimeConfig().deliveryAllowTest) === '1'
-      for (const o of await kaspiOrdersToSync(db)) {
+      for (const o of await kaspiOrdersToSync(db, 'apipay')) {
         try {
           const inv = o.providerRef ? await getInvoice(apipay, apipayFetch, Number(o.providerRef)) : await findInvoiceByOrder(apipay, apipayFetch, o.invId)
           if (inv) await applyApipayInvoice(db, inv, { sandbox: apipay.sandbox, allowTestDelivery })

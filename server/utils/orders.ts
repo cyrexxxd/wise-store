@@ -59,7 +59,11 @@ export async function ensureSchema(db: Db): Promise<void> {
   for (const stmt of SCHEMA.split(';').map((s) => s.trim()).filter(Boolean)) await db.query(stmt)
 }
 
-export type Provider = 'robokassa' | 'apipay'
+export type Provider = 'robokassa' | 'apipay' | 'kaspipos'
+
+/// Провайдеры оплаты через Kaspi (счёт по номеру телефона): ApiPay и напрямую от кассира (kaspipos).
+/// Лимиты «счетов на номер» и «в сутки» считаются по обоим — переключение провайдера их не обнуляет.
+const KASPI = `provider IN ('apipay', 'kaspipos')`
 
 /// Новый заказ. token — секрет страницы ожидания оплаты (номер заказа последовательный, по нему одному статус не отдаём).
 export async function createOrder(db: Db, nick: string, lines: readonly CheckoutLine[], totalKzt: number, isTest: boolean,
@@ -79,27 +83,28 @@ export async function setProviderRef(db: Db, invId: number, ref: string, status:
 /// Неоплаченные счета Kaspi на этот номер за сутки (кроме отменённых/истёкших) — защита от спама счетами чужим людям.
 export async function openKaspiInvoicesForPhone(db: Db, phoneHash: string): Promise<number> {
   const rows = await db.query<{ n: string }>(
-    `SELECT count(*)::text AS n FROM orders WHERE provider = 'apipay' AND phone_hash = $1 AND status = 'pending'
+    `SELECT count(*)::text AS n FROM orders WHERE ${KASPI} AND phone_hash = $1 AND status = 'pending'
        AND created_at > now() - interval '24 hours' AND coalesce(provider_status, '') NOT IN ('cancelled', 'expired', 'error')`,
     [phoneHash],
   )
   return Number(rows[0]!.n)
 }
 
-/// Счета Kaspi, выставленные с начала суток по Алматы: бюджет ниже дневного лимита тарифа ApiPay.
+/// Счета Kaspi, выставленные с начала суток по Алматы: бюджет ниже дневного лимита тарифа ApiPay
+/// и защита от спама счетами (у кассира лимита тарифа нет, но частые счета заметны антифроду Kaspi).
 export async function kaspiInvoicesToday(db: Db): Promise<number> {
   const rows = await db.query<{ n: string }>(
-    `SELECT count(*)::text AS n FROM orders WHERE provider = 'apipay'
+    `SELECT count(*)::text AS n FROM orders WHERE ${KASPI}
        AND created_at >= (date_trunc('day', now() AT TIME ZONE 'Asia/Almaty') AT TIME ZONE 'Asia/Almaty')`,
   )
   return Number(rows[0]!.n)
 }
 
-/// Привязать счёт ApiPay к заказу, если связь не записалась при выставлении (только если ещё не привязан).
-export async function linkProviderRef(db: Db, invId: number, ref: string): Promise<boolean> {
+/// Привязать счёт к заказу, если связь не записалась при выставлении (только если ещё не привязан).
+export async function linkProviderRef(db: Db, invId: number, ref: string, provider: Provider = 'apipay'): Promise<boolean> {
   const rows = await db.query(
-    `UPDATE orders SET provider_ref = $2 WHERE inv_id = $1 AND provider = 'apipay' AND provider_ref IS NULL RETURNING inv_id`,
-    [invId, ref],
+    `UPDATE orders SET provider_ref = $2 WHERE inv_id = $1 AND provider = $3 AND provider_ref IS NULL RETURNING inv_id`,
+    [invId, ref, provider],
   )
   return rows.length > 0
 }
@@ -117,11 +122,31 @@ export async function refundOrder(db: Db, invId: number): Promise<{ undelivered:
   })
 }
 
-/// Неоплаченные Kaspi-заказы моложе 25 ч (счёт живёт 24 ч) — для фоновой сверки со статусом в ApiPay.
-export async function kaspiOrdersToSync(db: Db, limit = 20): Promise<Array<{ invId: number; providerRef: string | null }>> {
-  const rows = await db.query<{ inv_id: number; provider_ref: string | null }>(
-    `SELECT inv_id, provider_ref FROM orders WHERE provider = 'apipay' AND status = 'pending'
-       AND created_at > now() - interval '25 hours' ORDER BY created_at DESC LIMIT $1`,
+export interface KaspiOrderToSync { invId: number; provider: Provider; providerRef: string | null; ageSeconds: number }
+
+/// Неоплаченные заказы провайдера моложе 25 ч (счёт живёт 24 ч) — для фоновой сверки со статусом у провайдера.
+/// Без заказов, у которых счёта точно нет (не привязан и помечен error), и без окончательных статусов кассира
+/// (отклонён/истёк — у Kaspi в оплату не переходят; у ApiPay cancelled→paid законен, его не исключаем).
+export async function kaspiOrdersToSync(db: Db, provider: 'apipay' | 'kaspipos', limit = 100): Promise<KaspiOrderToSync[]> {
+  const rows = await db.query<{ inv_id: number; provider: Provider; provider_ref: string | null; age: string }>(
+    `SELECT inv_id, provider, provider_ref, extract(epoch FROM now() - created_at)::int::text AS age FROM orders
+      WHERE provider = $1 AND status = 'pending' AND created_at > now() - interval '25 hours'
+        AND NOT (provider_ref IS NULL AND coalesce(provider_status, '') = 'error')
+        AND NOT (provider = 'kaspipos' AND coalesce(provider_status, '') IN ('cancelled', 'expired'))
+      ORDER BY created_at DESC LIMIT $2`,
+    [provider, limit],
+  )
+  return rows.map((r) => ({ invId: Number(r.inv_id), provider: r.provider, providerRef: r.provider_ref, ageSeconds: Number(r.age) }))
+}
+
+/// Оплаченные заказы кассира Kaspi (kaspipos) с ещё не выданными строками — проверить, не вернули ли деньги:
+/// вебхука о возврате у Kaspi нет, а невыданное после возврата выдавать нельзя (игрок не в сети, владелец вернул).
+export async function kaspiposPaidUndelivered(db: Db, limit = 20): Promise<Array<{ invId: number; providerRef: string }>> {
+  const rows = await db.query<{ inv_id: number; provider_ref: string }>(
+    `SELECT o.inv_id, o.provider_ref FROM orders o WHERE o.provider = 'kaspipos' AND o.status = 'paid' AND o.provider_ref IS NOT NULL
+        AND o.paid_at > now() - interval '25 hours'
+        AND EXISTS (SELECT 1 FROM deliveries d WHERE d.inv_id = o.inv_id AND d.status IN ('pending', 'claimed'))
+      ORDER BY o.paid_at DESC LIMIT $1`,
     [limit],
   )
   return rows.map((r) => ({ invId: Number(r.inv_id), providerRef: r.provider_ref }))
@@ -232,12 +257,16 @@ export async function claimPending(db: Db, limit: number, online: readonly strin
 /// Подтверждение плагина. Повторное подтверждение того же исхода безопасно; уже done не меняется.
 /// false — строки нет (неверный id).
 export async function confirmDelivery(db: Db, id: string, success: boolean, error: string | null): Promise<boolean> {
-  const rows = await db.query<{ id: string }>(
-    `UPDATE deliveries SET status = CASE WHEN status = 'done' THEN 'done' WHEN $2 THEN 'done' ELSE 'failed' END,
-            confirmed_at = COALESCE(confirmed_at, now()), error = CASE WHEN $2 THEN error ELSE $3 END
-      WHERE id = $1::uuid RETURNING id::text AS id`,
+  // строку отменили возвратом, пока плагин её выдавал: товар в игре уже есть — фиксируем это, а не прячем
+  const rows = await db.query<{ id: string; inv_id: number; after_refund: boolean }>(
+    `WITH prev AS (SELECT id, (status = 'failed' AND error = 'refunded') AS after_refund FROM deliveries WHERE id = $1::uuid)
+     UPDATE deliveries d SET status = CASE WHEN d.status = 'done' THEN 'done' WHEN $2 THEN 'done' ELSE 'failed' END,
+            confirmed_at = COALESCE(d.confirmed_at, now()),
+            error = CASE WHEN $2 AND prev.after_refund THEN 'delivered after refund' WHEN $2 THEN d.error ELSE $3 END
+       FROM prev WHERE d.id = prev.id RETURNING d.id::text AS id, d.inv_id, prev.after_refund`,
     [id, success, error?.slice(0, 500) ?? null],
   )
+  if (success && rows[0]?.after_refund) console.error(`[delivery] заказ ${rows[0].inv_id}: строка выдана ПОСЛЕ возврата денег — снять вручную`)
   return rows.length > 0
 }
 
