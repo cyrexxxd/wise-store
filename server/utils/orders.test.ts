@@ -155,14 +155,14 @@ describe('pending order of a disabled provider (old rows in the DB)', () => {
     if (!v.ok) throw new Error(v.message)
     const { invId, token } = await createOrder(db, v.nick, v.lines, v.total, false, 'kaspipos', 'hash-1')
     await db.query('UPDATE orders SET provider = $2, provider_ref = $3, provider_status = $4, status = $5 WHERE inv_id = $1',
-      [invId, 'old-kaspi-service', String(900 + invId), providerStatus, status])
+      [invId, 'apipay', String(900 + invId), providerStatus, status])
     return { invId, token }
   }
 
   it('is shown as finished (failed/expired), not as waiting forever', async () => {
     const { invId, token } = await legacyOrder()
     const view = (await orderByToken(db, invId, token))!
-    expect(view).toMatchObject({ status: 'pending', provider: 'old-kaspi-service' })
+    expect(view).toMatchObject({ status: 'pending', provider: 'apipay' })
     expect(await orderByToken(db, invId, '00000000-0000-0000-0000-000000000000')).toBeNull()
     expect(payPageState(view)).toEqual({ state: 'failed', providerStatus: 'expired', legacy: true })
     // без статуса у провайдера — тоже завершён

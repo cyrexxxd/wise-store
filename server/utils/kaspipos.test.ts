@@ -316,7 +316,7 @@ describe('Kaspi limits', () => {
     await kaspiOrder('claws-100', '2', 'same')
     // старая строка другого провайдера с тем же хэшем — в лимиты не входит
     const old = await kaspiOrder('claws-100', '3', 'same')
-    await db.query('UPDATE orders SET provider = $2 WHERE inv_id = $1', [old.invId, 'old-kaspi-service'])
+    await db.query('UPDATE orders SET provider = $2 WHERE inv_id = $1', [old.invId, 'apipay'])
     expect(await openKaspiInvoicesForPhone(db, 'same')).toBe(2)
     expect(await kaspiInvoicesToday(db)).toBe(2)
     await setProviderStatus(db, k1.invId, 'cancelled')
