@@ -1,6 +1,7 @@
 /// ResultURL Robokassa (метод POST или GET — как выбрано в кабинете). Проверяет подпись Паролем #2,
 /// сверяет сумму с заказом и один раз ставит выдачу в очередь. Ответ OK{InvId} — Robokassa перестаёт
 /// повторять уведомление; при ошибке — 400 без OK, в лог (повтор не поможет, нужна ручная сверка).
+import { notifyAlert, notifyOrderPaid } from '../../utils/discord'
 import { markPaid } from '../../utils/orders'
 import { parseResult, verifyResult } from '../../utils/robokassa'
 
@@ -24,8 +25,10 @@ export default defineEventHandler(async (event) => {
   // тестовый заказ выдачу не получает; на локальном стенде это включается NUXT_DELIVERY_ALLOW_TEST=1
   const allowTestDelivery = String(useRuntimeConfig().deliveryAllowTest) === '1'
   const result = await markPaid(db, n.invId, n.outSum, raw, { allowTestDelivery, provider: 'robokassa' })
+  if (result === 'paid' || result === 'paid_test') void notifyOrderPaid(db, n.invId)
   if (result === 'unknown_order' || result === 'amount_mismatch') {
     console.error(`[robokassa] заказ ${n.invId}: ${result}, OutSum=${n.outSum} — сверить вручную`)
+    notifyAlert(`Robokassa: заказ #${n.invId} — ${result}, OutSum=${n.outSum} — сверить вручную`)
     throw createError({ statusCode: 400, statusMessage: result })
   }
   if (result === 'refunded') console.warn(`[robokassa] уведомление по возвращённому заказу ${n.invId}`)

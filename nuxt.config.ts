@@ -98,6 +98,8 @@ export default defineNuxtConfig({
       dailyLimit: '40',
     },
     databaseUrl: '',
+    // вебхук канала Discord для уведомлений владельцу (оплаты и тревоги); пусто — выключено. Секрет: только env
+    discordWebhookUrl: '',
     // токен плагина WiseDelivery (X-Server-Token), не короче 32 символов
     deliveryServerToken: '',
     // 1 — выдавать и тестовые (IsTest) заказы: ТОЛЬКО локальный стенд, на Render не задавать

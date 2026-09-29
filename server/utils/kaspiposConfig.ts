@@ -1,4 +1,5 @@
 /// Настройки Kaspi-кассира из env Render (NUXT_KASPIPOS_*). null — сессия не задана, оплата Kaspi скрыта.
+import { notifyAlert } from './discord'
 import type { KaspiPosConfig } from './kaspipos'
 
 export function useKaspiPos(): KaspiPosConfig | null {
@@ -26,12 +27,18 @@ export const kaspiposFetch = (url: string, init: { method: string; headers: Reco
 let deadSince: number | null = null
 
 export function markKaspiPosDead(reason: string): void {
-  if (deadSince === null) console.error(`[kaspipos] СЕССИЯ КАССИРА НЕ ДЕЙСТВУЕТ (${reason}) — оплата Kaspi скрыта; нужен вход: node scripts/kaspipos-login.mjs`)
+  if (deadSince === null) {
+    console.error(`[kaspipos] СЕССИЯ КАССИРА НЕ ДЕЙСТВУЕТ (${reason}) — оплата Kaspi скрыта; нужен вход: node scripts/kaspipos-login.mjs`)
+    notifyAlert(`🔴 Оплата Kaspi ОТКЛЮЧЕНА: сессия кассира не действует (${reason}). Нужен вход по SMS: node scripts/kaspipos-login.mjs → env в Render`)
+  }
   deadSince ??= Date.now()
 }
 
 export function markKaspiPosAlive(): void {
-  if (deadSince !== null) console.info('[kaspipos] сессия кассира снова работает')
+  if (deadSince !== null) {
+    console.info('[kaspipos] сессия кассира снова работает')
+    notifyAlert('🟢 Сессия кассира снова работает — оплата Kaspi включена')
+  }
   deadSince = null
 }
 
