@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Ожидание оплаты Kaspi: счёт уже выставлен на номер покупателя. Страница раз в 5 с спрашивает статус заказа
-// (/api/orders/<id>?t=<token>); сервер при этом сам сверяется с Kaspi. QR — только у счетов ApiPay (qrSupported).
+// (/api/orders/<id>?t=<token>); сервер при этом сам сверяется с Kaspi.
 import { useCart } from '~/composables/useCart'
 import { formatKzt } from '~/utils/formatPrice'
 
@@ -9,8 +9,8 @@ useSeoMeta({ title: 'Оплата в Kaspi', robots: 'noindex' })
 const route = useRoute()
 const id = String(route.params.id)
 const token = String(route.query.t ?? '')
-// qrLink/qrSvg — ссылка Kaspi на этот же счёт и QR из неё (сервер отдаёт их, пока заказ ждёт оплаты)
-interface OrderState { invId: number; state: 'pending' | 'paid' | 'failed' | 'refunded'; providerStatus: string | null; amount: number; test: boolean; qrLink?: string | null; qrSvg?: string | null; qrSupported?: boolean }
+// legacy — заказ отключённого провайдера: сайт его больше не проверяет, оплату подтверждает только поддержка
+interface OrderState { invId: number; state: 'pending' | 'paid' | 'failed' | 'refunded'; providerStatus: string | null; amount: number; test: boolean; legacy?: boolean }
 const order = ref<OrderState | null>(null)
 const notFound = ref(false)
 let timer: ReturnType<typeof setTimeout> | undefined
@@ -25,7 +25,7 @@ async function poll() {
   }
   if (order.value?.state === 'paid') useCart().items.value = []
   if (order.value?.state === 'pending') timer = setTimeout(poll, 5000)
-  if (order.value?.state === 'failed') {
+  if (order.value?.state === 'failed' && !order.value.legacy) {
     startedFailedAt.value ??= Date.now()
     if (Date.now() - startedFailedAt.value < 15 * 60_000) timer = setTimeout(poll, 30_000)
   }
@@ -51,17 +51,7 @@ onBeforeUnmount(() => clearTimeout(timer))
         <li>Проверьте сумму и оплатите. Счёт действует 24 часа.</li>
         <li>Эта страница обновится сама — покупка придёт в игру за несколько минут.</li>
       </ol>
-      <div v-if="order?.qrSupported !== false" class="kaspi-qr">
-        <h3>Или оплатите по QR</h3>
-        <template v-if="order?.qrLink">
-          <!-- SVG собирает сервер (uqr) из проверенной ссылки https://kaspi.kz/… -->
-          <div class="qr-box" role="img" aria-label="QR-код для оплаты в Kaspi" v-html="order.qrSvg" />
-          <p>Отсканируйте камерой телефона или в приложении Kaspi.kz → «Kaspi QR». Это тот же счёт — второй раз платить не нужно.</p>
-          <a class="btn btn-pink" :href="order.qrLink" target="_blank" rel="noopener noreferrer">Открыть в Kaspi</a>
-        </template>
-        <p v-else class="qr-wait">QR появится здесь через несколько секунд, как только Kaspi примет счёт.</p>
-      </div>
-      <p class="hint">Счёт не пришёл? Проверьте номер в Kaspi → «Мои платежи» → «Счета»<template v-if="order?.qrSupported !== false"> или оплатите по QR выше</template>. Страницу можно
+      <p class="hint">Счёт не пришёл? Проверьте номер в Kaspi → «Мои платежи» → «Счета». Страницу можно
         закрыть: сайт сам проверяет оплату, и покупка будет выдана автоматически.</p>
     </div>
 
@@ -74,6 +64,12 @@ onBeforeUnmount(() => clearTimeout(timer))
     <div v-else-if="order.state === 'refunded'" class="kaspi-fail">
       <h2>Оплата возвращена</h2>
       <p>По этому заказу оформлен возврат денег в Kaspi. Вопросы — в поддержку.</p>
+      <NuxtLink class="btn btn-pink" to="/contacts">Контакты</NuxtLink>
+    </div>
+
+    <div v-else-if="order.legacy" class="kaspi-fail">
+      <h2>Счёт больше не проверяется</h2>
+      <p>Если вы оплатили — напишите в поддержку, заказ №{{ order.invId }}. Если нет — корзина сохранилась, оформите заново.</p>
       <NuxtLink class="btn btn-pink" to="/contacts">Контакты</NuxtLink>
     </div>
 

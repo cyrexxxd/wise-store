@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { validateCheckout } from './catalog'
 import {
   almatyIso, checkSession, commentPrefix, computeTokenSnMac, computeXSign, createRemoteInvoice, findInvoiceByComment, getRemoteInvoice,
-  KaspiPosError, kaspiPhone, mapStatus, parseKzt, publicKeyInfo, signedHeaders, type FetchFn, type KaspiPosConfig,
+  invoiceDescription, KaspiPosError, kaspiPhone, mapStatus, parseKzt, publicKeyInfo, signedHeaders, type FetchFn, type KaspiPosConfig,
 } from './kaspipos'
 import { applyKaspiPosInvoice, syncKaspiPosOrder } from './kaspiposSync'
 import { claimPending, confirmDelivery, createOrder, ensureSchema, kaspiInvoicesToday, kaspiOrdersToSync, kaspiposPaidUndelivered, openKaspiInvoicesForPhone, setProviderRef, setProviderStatus, type Db } from './orders'
@@ -160,6 +160,15 @@ describe('API client', () => {
     expect(await findInvoiceByComment(cfg, m.fetchFn, commentPrefix(12))).toBe(2)
     expect(await findInvoiceByComment(cfg, m.fetchFn, commentPrefix(1))).toBeNull()
   })
+
+  it('invoice description starts with the comment prefix the lost-invoice search looks for (reference values)', () => {
+    expect(invoiceDescription(42, '100 Когтей')).toBe('Wise Store #42: 100 Когтей')
+    // обрезка до 60 символов — как было
+    expect(invoiceDescription(123456, 'Роль Premium x1, Кейс косметики x3, Ключ x10, ещё кое-что'))
+      .toBe('Wise Store #123456: Роль Premium x1, Кейс косметики x3, Ключ')
+    for (const id of [1, 12, 123, 99999999]) expect(invoiceDescription(id, 'x'.repeat(200)).startsWith(commentPrefix(id))).toBe(true)
+    expect(invoiceDescription(7, 'Роль CAT')).toBe('Wise Store #7: Роль CAT')
+  })
 })
 
 // ─── применение статусов к заказам (PGlite — настоящий Postgres) ───
@@ -221,7 +230,7 @@ describe('applyKaspiPosInvoice', () => {
   it('a rejected kaspipos order leaves the sync list (final at Kaspi)', async () => {
     const o = await kaspiOrder()
     await applyKaspiPosInvoice(db, inv({ status: 'cancelled', rawStatus: 'RemotePaymentRejected' }), opts)
-    expect((await kaspiOrdersToSync(db, 'kaspipos')).map((x) => x.invId)).not.toContain(o.invId)
+    expect((await kaspiOrdersToSync(db)).map((x) => x.invId)).not.toContain(o.invId)
   })
 
   it('a partial return is saved once as partially_refunded and the order stays paid', async () => {
@@ -250,10 +259,10 @@ describe('applyKaspiPosInvoice', () => {
     expect(row).toEqual({ status: 'pending', provider_status: 'cancelled' })
   })
 
-  it('an ApiPay order is not touched by a kaspipos invoice with the same number', async () => {
+  it('an order of another provider is not touched by a kaspipos invoice with the same number', async () => {
     const v = validateCheckout('Notch', [{ slug: 'claws-100', qty: 1 }])
     if (!v.ok) throw new Error(v.message)
-    const a = await createOrder(db, v.nick, v.lines, v.total, false, 'apipay', 'h')
+    const a = await createOrder(db, v.nick, v.lines, v.total, false, 'robokassa')
     await setProviderRef(db, a.invId, '777', 'pending')
     expect(await applyKaspiPosInvoice(db, inv({ amountKzt: v.total }), opts)).toBe('unknown_invoice')
   })
@@ -282,7 +291,7 @@ describe('syncKaspiPosOrder', () => {
     expect(await syncKaspiPosOrder(db, cfg, m.fetchFn, { invId: o.invId, providerRef: null, ageSeconds: 700 }, opts)).toBe('not_found')
     const row = (await db.query<{ provider_status: string }>('SELECT provider_status FROM orders WHERE inv_id = $1', [o.invId]))[0]!
     expect(row.provider_status).toBe('lost')
-    expect((await kaspiOrdersToSync(db, 'kaspipos')).map((x) => x.invId)).toContain(o.invId)
+    expect((await kaspiOrdersToSync(db)).map((x) => x.invId)).toContain(o.invId)
     paidOps = [{ Id: 42, Comment: `Wise Store #${o.invId}: 100 Когтей` }]
     expect(await syncKaspiPosOrder(db, cfg, m.fetchFn, { invId: o.invId, providerRef: null, ageSeconds: 3000 }, opts)).toBe('paid')
   })
@@ -301,15 +310,17 @@ describe('syncKaspiPosOrder', () => {
   })
 })
 
-describe('limits span both Kaspi providers', () => {
-  it('open invoices per phone and today\'s count include apipay and kaspipos', async () => {
-    const v = validateCheckout('Notch', [{ slug: 'claws-100', qty: 1 }])
-    if (!v.ok) throw new Error(v.message)
-    await createOrder(db, v.nick, v.lines, v.total, false, 'apipay', 'same')
-    const k = await kaspiOrder('claws-100', '1', 'same')
+describe('Kaspi limits', () => {
+  it('open invoices per phone and daily count: kaspipos orders only, cancelled ones free the phone', async () => {
+    const k1 = await kaspiOrder('claws-100', '1', 'same')
+    await kaspiOrder('claws-100', '2', 'same')
+    // старая строка другого провайдера с тем же хэшем — в лимиты не входит
+    const old = await kaspiOrder('claws-100', '3', 'same')
+    await db.query('UPDATE orders SET provider = $2 WHERE inv_id = $1', [old.invId, 'old-kaspi-service'])
     expect(await openKaspiInvoicesForPhone(db, 'same')).toBe(2)
     expect(await kaspiInvoicesToday(db)).toBe(2)
-    await setProviderStatus(db, k.invId, 'cancelled')
+    await setProviderStatus(db, k1.invId, 'cancelled')
     expect(await openKaspiInvoicesForPhone(db, 'same')).toBe(1)
+    expect(await kaspiInvoicesToday(db)).toBe(2)               // бюджет суток считает и отменённые счета
   })
 })

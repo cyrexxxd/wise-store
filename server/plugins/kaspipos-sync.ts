@@ -2,7 +2,7 @@
 /// каждые 30 с, старше — раз в 5 минут (счёт живёт 24 ч). Раз в 5 минут — оплаченные с невыданными строками:
 /// если владелец вернул деньги в Kaspi Pay, заказ помечается refunded и невыданное не выдаётся.
 /// Раз в 10 минут, даже без ждущих заказов, проверяется, что сессия кассира жива: умерла — оплата Kaspi скрывается и в лог пишется ошибка (её ловит монитор).
-/// Работает, если заданы NUXT_KASPIPOS_* — независимо от NUXT_KASPI_PROVIDER (досверить старые заказы после отката).
+/// Работает, если заданы NUXT_KASPIPOS_*.
 import { checkSession, getRemoteInvoice, KaspiPosError } from '../utils/kaspipos'
 import { applyKaspiPosInvoice, syncKaspiPosOrder } from '../utils/kaspiposSync'
 import { kaspiOrdersToSync, kaspiposPaidUndelivered } from '../utils/orders'
@@ -23,7 +23,7 @@ export default defineNitroPlugin(() => {
     try {
       const db = await useDb()
       const allowTestDelivery = String(useRuntimeConfig().deliveryAllowTest) === '1'
-      for (const o of await kaspiOrdersToSync(db, 'kaspipos')) {
+      for (const o of await kaspiOrdersToSync(db)) {
         // старше часа (и потерянные, lost) — раз в 5 минут
         if (o.ageSeconds > 3600 && tickNo % OLD_EVERY_TICKS !== 0) continue
         try {

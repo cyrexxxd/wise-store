@@ -1,9 +1,7 @@
 import { PGlite } from '@electric-sql/pglite'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { validateCheckout } from './catalog'
-import type { ApipayInvoice } from './apipay'
-import { applyApipayInvoice } from './apipaySync'
-import { claimPending, confirmDelivery, createOrder, ensureSchema, kaspiInvoicesToday, markPaid, openKaspiInvoicesForPhone, orderByToken, setProviderRef, type Db } from './orders'
+import { claimPending, confirmDelivery, createOrder, ensureSchema, kaspiInvoicesToday, kaspiOrdersToSync, markPaid, openKaspiInvoicesForPhone, orderByToken, payPageState, setProviderRef, type Db } from './orders'
 
 function pgliteDb(pg: PGlite): Db {
   const wrap = (run: (text: string, params?: unknown[]) => Promise<{ rows: unknown[] }>): Db => ({
@@ -121,90 +119,19 @@ describe('test mode and online filter', () => {
   })
 })
 
-describe('ApiPay (Kaspi) orders', () => {
-  async function kaspiOrder(isTest = false) {
+describe('Kaspi (kaspipos) orders', () => {
+  async function kaspiOrder(ref: string | null = '555', hash = 'hash-1') {
     const v = validateCheckout('Notch', [{ slug: 'role-cat', qty: 1 }])
     if (!v.ok) throw new Error(v.message)
-    const { invId, token } = await createOrder(db, v.nick, v.lines, v.total, isTest, 'apipay')
-    await setProviderRef(db, invId, '555', 'processing')
+    const { invId, token } = await createOrder(db, v.nick, v.lines, v.total, false, 'kaspipos', hash)
+    if (ref) await setProviderRef(db, invId, ref, 'pending')
     return { invId, token }
   }
-  const paidInv = (over: Partial<ApipayInvoice> = {}): ApipayInvoice => ({ id: 555, amount: '1599.00', status: 'paid', external_order_id: undefined, is_sandbox: false, ...over })
-
-  it('a paid Kaspi invoice pays the order once and queues delivery', async () => {
-    const { invId } = await kaspiOrder()
-    expect(await applyApipayInvoice(db, paidInv({ external_order_id: String(invId) }), { sandbox: false, allowTestDelivery: false })).toBe('paid')
-    expect(await applyApipayInvoice(db, paidInv(), { sandbox: false, allowTestDelivery: false })).toBe('already_paid')
-    expect((await db.query('SELECT 1 FROM deliveries')).length).toBe(3)          // lp + 100 Когтей + tellraw
-  })
-
-  it('a sandbox invoice never delivers, even for a live-mode order', async () => {
-    await kaspiOrder()
-    expect(await applyApipayInvoice(db, paidInv({ is_sandbox: true }), { sandbox: false, allowTestDelivery: false })).toBe('paid_test')
-    expect((await db.query('SELECT 1 FROM deliveries')).length).toBe(0)
-  })
-
-  it('rejects wrong amount, unknown invoice and a mismatched order id; stores intermediate statuses', async () => {
-    const { invId, token } = await kaspiOrder()
-    expect(await applyApipayInvoice(db, paidInv({ amount: '1.00' }), { sandbox: false, allowTestDelivery: false })).toBe('amount_mismatch')
-    expect(await applyApipayInvoice(db, paidInv({ id: 999 }), { sandbox: false, allowTestDelivery: false })).toBe('unknown_invoice')
-    expect(await applyApipayInvoice(db, paidInv({ external_order_id: '12345' }), { sandbox: false, allowTestDelivery: false })).toBe('unknown_invoice')
-    expect(await applyApipayInvoice(db, paidInv({ status: 'expired' }), { sandbox: false, allowTestDelivery: false })).toBe('status_saved')
-    const view = await orderByToken(db, invId, token)
-    expect(view).toMatchObject({ status: 'pending', provider: 'apipay', providerStatus: 'expired' })
-    expect(await orderByToken(db, invId, '00000000-0000-0000-0000-000000000000')).toBeNull()
-  })
 
   it('a Robokassa notification cannot pay a Kaspi order', async () => {
     const { invId } = await kaspiOrder()
     expect(await markPaid(db, invId, '1599.00', {}, { provider: 'robokassa' })).toBe('unknown_order')
-  })
-})
-
-describe('ApiPay review fixes', () => {
-  async function kaspiOrder(ref: string | null = '777', isTestEnv = true) {
-    const v = validateCheckout('Notch', [{ slug: 'role-cat', qty: 1 }])
-    if (!v.ok) throw new Error(v.message)
-    const { invId, token } = await createOrder(db, v.nick, v.lines, v.total, isTestEnv, 'apipay', 'hash-1')
-    if (ref) await setProviderRef(db, invId, ref, 'processing')
-    return { invId, token }
-  }
-  const inv = (over: Partial<ApipayInvoice> = {}): ApipayInvoice => ({ id: 777, amount: '1599.00', status: 'paid', is_sandbox: false, ...over })
-  const opts = { sandbox: true, allowTestDelivery: false }                    // сайт по умолчанию в «песочнице»
-
-  it('a REAL payment is delivered even if the site setting still says sandbox', async () => {
-    await kaspiOrder()
-    expect(await applyApipayInvoice(db, inv(), opts)).toBe('paid')
-    expect((await db.query('SELECT 1 FROM deliveries')).length).toBe(3)          // lp + 100 Когтей + tellraw
-  })
-
-  it('an invoice without is_sandbox is treated as test (no delivery)', async () => {
-    await kaspiOrder()
-    expect(await applyApipayInvoice(db, inv({ is_sandbox: undefined }), { sandbox: false, allowTestDelivery: false })).toBe('paid_test')
-  })
-
-  it('a fully refunded invoice refunds the order and cancels undelivered lines', async () => {
-    const { invId, token } = await kaspiOrder()
-    await applyApipayInvoice(db, inv(), opts)
-    expect(await applyApipayInvoice(db, inv({ is_fully_refunded: true }), opts)).toBe('refunded')
-    expect(await orderByToken(db, invId, token)).toMatchObject({ status: 'refunded' })
-    const rows = await db.query<{ status: string }>('SELECT status FROM deliveries')
-    expect(rows.every((r) => r.status === 'failed')).toBe(true)
-    expect(await claimPending(db, 20, ['Notch'])).toEqual([])
-  })
-
-  it('a refunded invoice arriving before we saw "paid" does not deliver', async () => {
-    await kaspiOrder()
-    expect(await applyApipayInvoice(db, inv({ is_fully_refunded: true }), opts)).toBe('refunded')
     expect((await db.query('SELECT 1 FROM deliveries')).length).toBe(0)
-    expect(await applyApipayInvoice(db, inv({ status: 'partially_refunded' }), opts)).toBe('status_saved')
-  })
-
-  it('links an invoice to its order by external_order_id when the ref was never saved', async () => {
-    const { invId } = await kaspiOrder(null)
-    expect(await applyApipayInvoice(db, inv({ id: 4242, external_order_id: String(invId) }), opts)).toBe('paid')
-    // второй «свой» счёт на тот же заказ не привяжется — ref уже занят
-    expect(await applyApipayInvoice(db, inv({ id: 4243, external_order_id: String(invId) }), opts)).toBe('unknown_invoice')
   })
 
   it('counts open Kaspi invoices per phone hash and per day', async () => {
@@ -215,14 +142,54 @@ describe('ApiPay review fixes', () => {
     await db.query("UPDATE orders SET provider_status = 'expired' WHERE provider_ref = '1'")
     expect(await openKaspiInvoicesForPhone(db, 'hash-1')).toBe(1)
     expect(await kaspiInvoicesToday(db)).toBe(2)
+    // карта (Robokassa) в лимиты Kaspi не входит
+    await order([{ slug: 'role-cat', qty: 1 }])
+    expect(await kaspiInvoicesToday(db)).toBe(2)
+  })
+})
+
+describe('pending order of a disabled provider (old rows in the DB)', () => {
+  // провайдер, которого больше нет в коде: такие строки остались в orders с прежних времён
+  async function legacyOrder(status = 'pending', providerStatus: string | null = 'pending') {
+    const v = validateCheckout('Notch', [{ slug: 'role-cat', qty: 1 }])
+    if (!v.ok) throw new Error(v.message)
+    const { invId, token } = await createOrder(db, v.nick, v.lines, v.total, false, 'kaspipos', 'hash-1')
+    await db.query('UPDATE orders SET provider = $2, provider_ref = $3, provider_status = $4, status = $5 WHERE inv_id = $1',
+      [invId, 'old-kaspi-service', String(900 + invId), providerStatus, status])
+    return { invId, token }
+  }
+
+  it('is shown as finished (failed/expired), not as waiting forever', async () => {
+    const { invId, token } = await legacyOrder()
+    const view = (await orderByToken(db, invId, token))!
+    expect(view).toMatchObject({ status: 'pending', provider: 'old-kaspi-service' })
+    expect(await orderByToken(db, invId, '00000000-0000-0000-0000-000000000000')).toBeNull()
+    expect(payPageState(view)).toEqual({ state: 'failed', providerStatus: 'expired', legacy: true })
+    // без статуса у провайдера — тоже завершён
+    expect(payPageState({ ...view, providerStatus: null })).toEqual({ state: 'failed', providerStatus: 'expired', legacy: true })
   })
 
-  it('stores only whitelisted invoice fields (no phone, no name)', async () => {
-    await kaspiOrder()
-    await applyApipayInvoice(db, { ...inv(), client_phone: '87071234567', client_name: 'Иван И.' } as ApipayInvoice, opts)
-    const [row] = await db.query<{ result_raw: unknown }>('SELECT result_raw FROM orders')
-    const raw = JSON.stringify(row!.result_raw)
-    expect(raw).not.toContain('87071234567')
-    expect(raw).not.toContain('Иван')
+  it('a paid or refunded old order keeps its real state', async () => {
+    const paid = await legacyOrder('paid', 'paid')
+    expect(payPageState((await orderByToken(db, paid.invId, paid.token))!)).toMatchObject({ state: 'paid', legacy: true })
+    const refunded = await legacyOrder('refunded', 'paid')
+    expect(payPageState((await orderByToken(db, refunded.invId, refunded.token))!)).toMatchObject({ state: 'refunded', legacy: true })
+  })
+
+  it('is not reconciled and does not count against Kaspi limits', async () => {
+    await legacyOrder()
+    expect(await kaspiOrdersToSync(db)).toEqual([])
+    expect(await openKaspiInvoicesForPhone(db, 'hash-1')).toBe(0)
+    expect(await kaspiInvoicesToday(db)).toBe(0)
+  })
+
+  it('kaspipos orders: waiting and failed states are unchanged', () => {
+    const k = { status: 'pending', provider: 'kaspipos' }
+    expect(payPageState({ ...k, providerStatus: 'pending' })).toEqual({ state: 'pending', providerStatus: 'pending', legacy: false })
+    expect(payPageState({ ...k, providerStatus: null })).toEqual({ state: 'pending', providerStatus: null, legacy: false })
+    expect(payPageState({ ...k, providerStatus: 'unknown' })).toMatchObject({ state: 'pending' })
+    for (const st of ['cancelled', 'expired', 'error', 'lost']) {
+      expect(payPageState({ ...k, providerStatus: st })).toEqual({ state: 'failed', providerStatus: st, legacy: false })
+    }
   })
 })

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Вход кассира Kaspi Pay по SMS для оплаты Kaspi на сайте (NUXT_KASPI_PROVIDER=kaspipos).
+// Вход кассира Kaspi Pay по SMS для оплаты Kaspi на сайте (NUXT_KASPIPOS_*).
 // Порт входа из tapter-dev/kaspi-pos-automation (MIT): src/routes/auth.js, src/crypto.js, src/helpers.js.
 //
 //   node scripts/kaspipos-login.mjs            — спросит номер КАССИРА и код из SMS, напечатает строки env

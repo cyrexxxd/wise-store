@@ -1,13 +1,5 @@
-/// Настройки Kaspi-кассира из env Render (NUXT_KASPIPOS_*) и выбор провайдера Kaspi для НОВЫХ счетов
-/// (NUXT_KASPI_PROVIDER = apipay | kaspipos). Сверка старых заказов идёт по полю provider каждого заказа —
-/// после переключения счета, выставленные через ApiPay, продолжают сверяться, пока жив его ключ.
+/// Настройки Kaspi-кассира из env Render (NUXT_KASPIPOS_*). null — сессия не задана, оплата Kaspi скрыта.
 import type { KaspiPosConfig } from './kaspipos'
-
-export type KaspiProvider = 'apipay' | 'kaspipos'
-
-export function useKaspiProvider(): KaspiProvider {
-  return String(useRuntimeConfig().kaspiProvider) === 'kaspipos' ? 'kaspipos' : 'apipay'
-}
 
 export function useKaspiPos(): KaspiPosConfig | null {
   const c = useRuntimeConfig().kaspipos

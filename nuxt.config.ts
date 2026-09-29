@@ -63,7 +63,8 @@ export default defineNuxtConfig({
 
   // Приватные ключи — только на сервере Nuxt, в клиентский бандл не попадают.
   // Задаются переменными окружения (см. .env.example): NUXT_ROBOKASSA_LOGIN/PASSWORD1/PASSWORD2/HASH/TEST,
-  // NUXT_DATABASE_URL, NUXT_DELIVERY_SERVER_TOKEN, NUXT_PUBLIC_SITE_URL, NUXT_PUBLIC_KZT_PER_RUB.
+  // NUXT_PHONE_HASH_SECRET, NUXT_KASPIPOS_*, NUXT_DATABASE_URL, NUXT_DELIVERY_SERVER_TOKEN, NUXT_PUBLIC_SITE_URL,
+  // NUXT_PUBLIC_KZT_PER_RUB.
   runtimeConfig: {
     robokassa: {
       login: '',
@@ -74,20 +75,8 @@ export default defineNuxtConfig({
       // 1 — тестовый режим (IsTest=1, тестовые пароли), 0 — боевые платежи
       test: '1',
     },
-    // ApiPay.kz — оплата через Kaspi (счёт по номеру телефона). Ключ и секрет вебхука — из кабинета ApiPay.
-    apipay: {
-      apiKey: '',
-      webhookSecret: '',
-      // 1 — песочница: счета не настоящие, заказы тестовые и без выдачи; 0 — боевой режим (после одобрения анкеты)
-      sandbox: '1',
-      // только для локального стенда (мок ApiPay); на Render не задавать
-      baseUrl: '',
-      // бюджет счетов Kaspi в сутки (ниже дневного лимита тарифа ApiPay: trial 50, «Старт» 30)
-      dailyLimit: '25',
-    },
-    // Через кого выставлять НОВЫЕ счета Kaspi: apipay (сервис ApiPay) | kaspipos (напрямую от кассира Kaspi Pay).
-    kaspiProvider: 'apipay',
-    // секрет HMAC номера телефона (лимит «счетов на номер»); пусто — берётся секрет вебхука ApiPay (как было)
+    // Секрет HMAC номера телефона (лимит «счетов на номер»). ОБЯЗАТЕЛЕН для оплаты Kaspi: пусто — Kaspi скрыт.
+    // Менять нельзя: хэши уже лежат в orders.phone_hash, с новым секретом лимит по старым счетам обнулится.
     phoneHashSecret: '',
     // Kaspi Pay от имени кассира (порт tapter-dev/kaspi-pos-automation). Все значения печатает
     // scripts/kaspipos-login.mjs после входа по SMS; устройство и сессия — секреты уровня строки БД.

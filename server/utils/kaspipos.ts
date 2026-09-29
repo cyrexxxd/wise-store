@@ -176,7 +176,7 @@ export async function createRemoteInvoice(cfg: KaspiPosConfig, fetchFn: FetchFn,
   return data.QrOperationId
 }
 
-/// Статус счёта в нашем словаре (тот же, что у ApiPay: страница ожидания и лимиты понимают его одинаково).
+/// Статус счёта в нашем словаре (его понимают страница ожидания и лимиты).
 export type KaspiStatus = 'pending' | 'paid' | 'cancelled' | 'expired' | 'unknown'
 
 export function mapStatus(raw: unknown): KaspiStatus {
@@ -255,6 +255,12 @@ export async function checkSession(cfg: KaspiPosConfig, fetchFn: FetchFn): Promi
 /// Префикс комментария заказа — по нему счёт находится в истории Kaspi. «#12:» не совпадёт с «#123:».
 export function commentPrefix(invId: number): string {
   return `Wise Store #${invId}:`
+}
+
+/// Комментарий счёта «Wise Store #<заказ>: <состав>» (до 60 символов). Начинается с commentPrefix —
+/// по нему сверка находит счёт, ответ на создание которого потерялся.
+export function invoiceDescription(invId: number, what: string): string {
+  return `Wise Store #${invId}: ${what}`.slice(0, 60)
 }
 
 /// Понятный покупателю текст по ошибке Kaspi при выставлении счёта.

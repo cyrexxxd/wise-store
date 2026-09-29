@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Модалка корзины. "Перейти к оплате" отправляет ник, состав корзины и способ оплаты на /api/checkout.
-// Kaspi (ApiPay или напрямую от кассира — NUXT_KASPI_PROVIDER): сервер выставляет счёт на номер покупателя → страница /pay/<заказ> ждёт оплату.
+// Kaspi (напрямую от кассира Kaspi Pay): сервер выставляет счёт на номер покупателя → страница /pay/<заказ> ждёт оплату.
 // Выдачу делает плагин WiseDelivery. Оплата картой (Robokassa) на сервере осталась, но в корзине скрыта — магазин не активирован.
 import { useCart } from '~/composables/useCart'
 import { approxRub, formatKzt } from '~/utils/formatPrice'

@@ -59,11 +59,9 @@ export async function ensureSchema(db: Db): Promise<void> {
   for (const stmt of SCHEMA.split(';').map((s) => s.trim()).filter(Boolean)) await db.query(stmt)
 }
 
-export type Provider = 'robokassa' | 'apipay' | 'kaspipos'
-
-/// Провайдеры оплаты через Kaspi (счёт по номеру телефона): ApiPay и напрямую от кассира (kaspipos).
-/// Лимиты «счетов на номер» и «в сутки» считаются по обоим — переключение провайдера их не обнуляет.
-const KASPI = `provider IN ('apipay', 'kaspipos')`
+/// Провайдер новых заказов: robokassa (карта) или kaspipos (счёт Kaspi по номеру, напрямую от кассира).
+/// В старых строках БД бывают и другие значения provider — такие заказы только показываются, не сверяются.
+export type Provider = 'robokassa' | 'kaspipos'
 
 /// Новый заказ. token — секрет страницы ожидания оплаты (номер заказа последовательный, по нему одному статус не отдаём).
 export async function createOrder(db: Db, nick: string, lines: readonly CheckoutLine[], totalKzt: number, isTest: boolean,
@@ -83,25 +81,25 @@ export async function setProviderRef(db: Db, invId: number, ref: string, status:
 /// Неоплаченные счета Kaspi на этот номер за сутки (кроме отменённых/истёкших) — защита от спама счетами чужим людям.
 export async function openKaspiInvoicesForPhone(db: Db, phoneHash: string): Promise<number> {
   const rows = await db.query<{ n: string }>(
-    `SELECT count(*)::text AS n FROM orders WHERE ${KASPI} AND phone_hash = $1 AND status = 'pending'
+    `SELECT count(*)::text AS n FROM orders WHERE provider = 'kaspipos' AND phone_hash = $1 AND status = 'pending'
        AND created_at > now() - interval '24 hours' AND coalesce(provider_status, '') NOT IN ('cancelled', 'expired', 'error')`,
     [phoneHash],
   )
   return Number(rows[0]!.n)
 }
 
-/// Счета Kaspi, выставленные с начала суток по Алматы: бюджет ниже дневного лимита тарифа ApiPay
-/// и защита от спама счетами (у кассира лимита тарифа нет, но частые счета заметны антифроду Kaspi).
+/// Счета Kaspi, выставленные с начала суток по Алматы: защита от спама счетами (у кассира лимита тарифа
+/// нет, но частые счета заметны антифроду Kaspi).
 export async function kaspiInvoicesToday(db: Db): Promise<number> {
   const rows = await db.query<{ n: string }>(
-    `SELECT count(*)::text AS n FROM orders WHERE ${KASPI}
+    `SELECT count(*)::text AS n FROM orders WHERE provider = 'kaspipos'
        AND created_at >= (date_trunc('day', now() AT TIME ZONE 'Asia/Almaty') AT TIME ZONE 'Asia/Almaty')`,
   )
   return Number(rows[0]!.n)
 }
 
 /// Привязать счёт к заказу, если связь не записалась при выставлении (только если ещё не привязан).
-export async function linkProviderRef(db: Db, invId: number, ref: string, provider: Provider = 'apipay'): Promise<boolean> {
+export async function linkProviderRef(db: Db, invId: number, ref: string, provider: Provider): Promise<boolean> {
   const rows = await db.query(
     `UPDATE orders SET provider_ref = $2 WHERE inv_id = $1 AND provider = $3 AND provider_ref IS NULL RETURNING inv_id`,
     [invId, ref, provider],
@@ -122,21 +120,21 @@ export async function refundOrder(db: Db, invId: number): Promise<{ undelivered:
   })
 }
 
-export interface KaspiOrderToSync { invId: number; provider: Provider; providerRef: string | null; ageSeconds: number }
+export interface KaspiOrderToSync { invId: number; providerRef: string | null; ageSeconds: number }
 
-/// Неоплаченные заказы провайдера моложе 25 ч (счёт живёт 24 ч) — для фоновой сверки со статусом у провайдера.
-/// Без заказов, у которых счёта точно нет (не привязан и помечен error), и без окончательных статусов кассира
-/// (отклонён/истёк — у Kaspi в оплату не переходят; у ApiPay cancelled→paid законен, его не исключаем).
-export async function kaspiOrdersToSync(db: Db, provider: 'apipay' | 'kaspipos', limit = 100): Promise<KaspiOrderToSync[]> {
-  const rows = await db.query<{ inv_id: number; provider: Provider; provider_ref: string | null; age: string }>(
-    `SELECT inv_id, provider, provider_ref, extract(epoch FROM now() - created_at)::int::text AS age FROM orders
-      WHERE provider = $1 AND status = 'pending' AND created_at > now() - interval '25 hours'
+/// Неоплаченные заказы кассира Kaspi (kaspipos) моложе 25 ч (счёт живёт 24 ч) — для фоновой сверки со статусом в Kaspi.
+/// Без заказов, у которых счёта точно нет (не привязан и помечен error), и без окончательных статусов
+/// (отклонён/истёк — у Kaspi в оплату не переходят). Заказы других провайдеров сюда не попадают.
+export async function kaspiOrdersToSync(db: Db, limit = 100): Promise<KaspiOrderToSync[]> {
+  const rows = await db.query<{ inv_id: number; provider_ref: string | null; age: string }>(
+    `SELECT inv_id, provider_ref, extract(epoch FROM now() - created_at)::int::text AS age FROM orders
+      WHERE provider = 'kaspipos' AND status = 'pending' AND created_at > now() - interval '25 hours'
         AND NOT (provider_ref IS NULL AND coalesce(provider_status, '') = 'error')
-        AND NOT (provider = 'kaspipos' AND coalesce(provider_status, '') IN ('cancelled', 'expired'))
-      ORDER BY created_at DESC LIMIT $2`,
-    [provider, limit],
+        AND coalesce(provider_status, '') NOT IN ('cancelled', 'expired')
+      ORDER BY created_at DESC LIMIT $1`,
+    [limit],
   )
-  return rows.map((r) => ({ invId: Number(r.inv_id), provider: r.provider, providerRef: r.provider_ref, ageSeconds: Number(r.age) }))
+  return rows.map((r) => ({ invId: Number(r.inv_id), providerRef: r.provider_ref, ageSeconds: Number(r.age) }))
 }
 
 /// Оплаченные заказы кассира Kaspi (kaspipos) с ещё не выданными строками — проверить, не вернули ли деньги:
@@ -159,7 +157,8 @@ export async function setProviderStatus(db: Db, invId: number, status: string): 
 export interface OrderView {
   invId: number
   status: string
-  provider: Provider
+  /// строка из БД: у старых заказов бывают провайдеры, которых в Provider больше нет
+  provider: string
   providerRef: string | null
   providerStatus: string | null
   amountKzt: number
@@ -169,7 +168,7 @@ export interface OrderView {
 
 const ORDER_VIEW = `inv_id, status, provider, provider_ref, provider_status, amount_kzt, is_test, created_at::text AS created_at`
 const toView = (r: Record<string, unknown>): OrderView => ({
-  invId: Number(r.inv_id), status: String(r.status), provider: r.provider as Provider, providerRef: (r.provider_ref as string) ?? null,
+  invId: Number(r.inv_id), status: String(r.status), provider: String(r.provider), providerRef: (r.provider_ref as string) ?? null,
   providerStatus: (r.provider_status as string) ?? null, amountKzt: Number(r.amount_kzt), isTest: Boolean(r.is_test), createdAt: String(r.created_at),
 })
 
@@ -177,6 +176,27 @@ const toView = (r: Record<string, unknown>): OrderView => ({
 export async function orderByToken(db: Db, invId: number, token: string): Promise<OrderView | null> {
   const rows = await db.query(`SELECT ${ORDER_VIEW} FROM orders WHERE inv_id = $1 AND public_token = $2::uuid`, [invId, token])
   return rows[0] ? toView(rows[0]) : null
+}
+
+const TERMINAL_FAIL = new Set(['cancelled', 'expired', 'error', 'lost'])
+
+export interface PayPageState {
+  state: 'pending' | 'paid' | 'failed' | 'refunded'
+  providerStatus: string | null
+  /// заказ не kaspipos (старый провайдер, отключён): сайт его больше не проверяет — только поддержка
+  legacy: boolean
+}
+
+/// Состояние заказа для страницы ожидания оплаты /pay. Неоплаченный заказ не kaspipos никто больше не сверяет —
+/// отдаём его завершённым (failed/expired, legacy), чтобы страница не ждала вечно, а отправила в поддержку.
+/// У kaspipos cancelled/expired/error/lost показываются как failed, но страница ещё проверяет (оплата в последний момент).
+export function payPageState(order: Pick<OrderView, 'status' | 'provider' | 'providerStatus'>): PayPageState {
+  const legacy = order.provider !== 'kaspipos'
+  if (order.status === 'paid') return { state: 'paid', providerStatus: order.providerStatus, legacy }
+  if (order.status === 'refunded') return { state: 'refunded', providerStatus: order.providerStatus, legacy }
+  if (legacy) return { state: 'failed', providerStatus: 'expired', legacy }
+  const failed = order.providerStatus !== null && TERMINAL_FAIL.has(order.providerStatus)
+  return { state: failed ? 'failed' : 'pending', providerStatus: order.providerStatus, legacy }
 }
 
 export async function orderByProviderRef(db: Db, provider: Provider, ref: string): Promise<OrderView | null> {
